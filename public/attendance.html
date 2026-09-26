@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Attendance Check-In - College Event Hub</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="/" class="brand">
+        <span class="brand-icon">⚡</span>
+        <span class="brand-text">College Event Hub</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="container section">
+    <h1>QR Event Pass Verification & Attendance Check-In</h1>
+    <p class="text-muted">Scan or enter student event pass registration ID.</p>
+
+    <div class="card" style="max-width: 550px; margin-top: 2rem;">
+      <form id="attendance-scan-form">
+        <div class="form-group">
+          <label>Registration ID or Scanned QR String</label>
+          <input type="text" id="registration-id-input" required class="form-control" placeholder="e.g. 65f123abc456...">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Verify Ticket & Mark Attendance</button>
+      </form>
+      <div id="scan-feedback" style="margin-top: 1.5rem;"></div>
+    </div>
+  </main>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/qr.js"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notifications - College Event Hub</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div class="brand"><h2>Event Hub</h2></div>
+      <nav class="sidebar-nav">
+        <a href="/student/dashboard.html" class="nav-item"><span class="icon">📊</span> Dashboard</a>
+        <a href="/student/notifications.html" class="nav-item active"><span class="icon">🔔</span> Notifications</a>
+      </nav>
+    </aside>
+    <main class="main-content">
+      <h1>In-App Notifications</h1>
+      <div id="notifications-list">
+        <p>Loading notifications...</p>
+      </div>
+    </main>
+  </div>
+  <script src="/js/api.js"></script>
+</body>
+</html>

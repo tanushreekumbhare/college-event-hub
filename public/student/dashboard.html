@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard - College Event Hub</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-icon">⚡</span>
+        <h2>Event Hub</h2>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/student/dashboard.html" class="nav-item active"><span class="icon">📊</span> Dashboard</a>
+        <a href="/student/registrations.html" class="nav-item"><span class="icon">🎟️</span> My Registrations</a>
+        <a href="/student/favorites.html" class="nav-item"><span class="icon">⭐</span> Favorites</a>
+        <a href="/student/certificates.html" class="nav-item"><span class="icon">📜</span> Certificates</a>
+        <a href="/student/notifications.html" class="nav-item"><span class="icon">🔔</span> Notifications</a>
+        <a href="/leaderboard.html" class="nav-item"><span class="icon">🏆</span> Leaderboard</a>
+        <a href="/student/profile.html" class="nav-item"><span class="icon">👤</span> Profile</a>
+      </nav>
+      <div class="sidebar-footer">
+        <button id="logout-btn" class="btn btn-outline" style="width: 100%;">Sign Out</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="dashboard-header">
+        <div>
+          <h1 id="welcome-msg">Welcome Back!</h1>
+          <p class="text-muted">Manage your upcoming campus events and certificates.</p>
+        </div>
+      </header>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">🎟️</div>
+          <div class="stat-data">
+            <h3 id="stat-registered">0</h3>
+            <p>Registered Events</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">✅</div>
+          <div class="stat-data">
+            <h3 id="stat-attended">0</h3>
+            <p>Attended Events</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📜</div>
+          <div class="stat-data">
+            <h3 id="stat-certificates">0</h3>
+            <p>Certificates Earned</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⭐</div>
+          <div class="stat-data">
+            <h3 id="stat-points">0</h3>
+            <p>Participation Points</p>
+          </div>
+        </div>
+      </div>
+
+      <section class="section">
+        <div class="section-header">
+          <h2>Your Registered Events</h2>
+          <a href="/events.html" class="btn btn-primary">Browse All Events</a>
+        </div>
+        <div id="registered-events-container" class="events-grid">
+          <p class="text-muted">Loading your event passes...</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>

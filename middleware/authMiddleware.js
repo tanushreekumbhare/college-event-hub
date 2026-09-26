@@ -56,9 +56,45 @@ const isStudent = (req, res, next) => {
   });
 };
 
+// Check if logged-in user is an Organizer
+const isOrganizer = (req, res, next) => {
+  if (req.session && req.session.user) {
+    if (req.session.user.role === 'organizer') {
+      return next();
+    }
+    return res.status(403).json({
+      success: false,
+      message: 'Access denied: Organizer privileges required.'
+    });
+  }
+  return res.status(401).json({
+    success: false,
+    message: 'Authentication required. Please login as organizer.'
+  });
+};
+
+// Check if user is Organizer or Admin
+const isOrganizerOrAdmin = (req, res, next) => {
+  if (req.session && req.session.user) {
+    if (req.session.user.role === 'organizer' || req.session.user.role === 'admin') {
+      return next();
+    }
+    return res.status(403).json({
+      success: false,
+      message: 'Access denied: Organizer or Admin privileges required.'
+    });
+  }
+  return res.status(401).json({
+    success: false,
+    message: 'Authentication required.'
+  });
+};
+
 module.exports = {
   requireDB,
   isAuthenticated,
   isAdmin,
-  isStudent
+  isStudent,
+  isOrganizer,
+  isOrganizerOrAdmin
 };

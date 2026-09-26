@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - College Event Hub</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-icon">⚡</span>
+        <h2>Admin Console</h2>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/admin/dashboard.html" class="nav-item active"><span class="icon">📊</span> Overview</a>
+        <a href="/admin/events.html" class="nav-item"><span class="icon">📅</span> Pending Approvals</a>
+        <a href="/admin/users.html" class="nav-item"><span class="icon">👥</span> Users</a>
+        <a href="/admin/clubs.html" class="nav-item"><span class="icon">🏛️</span> Clubs</a>
+        <a href="/admin/venues.html" class="nav-item"><span class="icon">📍</span> Venues</a>
+        <a href="/admin/feedback.html" class="nav-item"><span class="icon">💬</span> Feedback</a>
+      </nav>
+      <div class="sidebar-footer">
+        <button id="logout-btn" class="btn btn-outline" style="width: 100%;">Sign Out</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="dashboard-header">
+        <div>
+          <h1>System Overview & Analytics</h1>
+          <p class="text-muted">Cloud Computing MongoDB Atlas Event Metrics</p>
+        </div>
+      </header>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">📅</div>
+          <div class="stat-data"><h3 id="stat-total-events">0</h3><p>Total Events</p></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🎟️</div>
+          <div class="stat-data"><h3 id="stat-total-regs">0</h3><p>Total Registrations</p></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🎓</div>
+          <div class="stat-data"><h3 id="stat-total-students">0</h3><p>Total Students</p></div>
+        </div>
+      </div>
+
+      <section class="section card" style="margin-top: 2rem;">
+        <h2>Event Category Breakdown</h2>
+        <canvas id="category-chart" height="100"></canvas>
+      </section>
+    </main>
+  </div>
+  <script src="/js/api.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

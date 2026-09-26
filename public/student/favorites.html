@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Favorite Events - College Event Hub</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div class="brand"><h2>Event Hub</h2></div>
+      <nav class="sidebar-nav">
+        <a href="/student/dashboard.html" class="nav-item"><span class="icon">📊</span> Dashboard</a>
+        <a href="/student/favorites.html" class="nav-item active"><span class="icon">⭐</span> Favorites</a>
+      </nav>
+    </aside>
+    <main class="main-content">
+      <h1>Saved & Favorite Events</h1>
+      <div id="favorites-list" class="events-grid">
+        <p>Loading favorites...</p>
+      </div>
+    </main>
+  </div>
+  <script src="/js/api.js"></script>
+</body>
+</html>

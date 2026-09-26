@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Analytics - Organizer Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div class="brand"><h2>Organizer Portal</h2></div>
+      <nav class="sidebar-nav">
+        <a href="/organizer/dashboard.html" class="nav-item"><span class="icon">📊</span> Dashboard</a>
+        <a href="/organizer/analytics.html" class="nav-item active"><span class="icon">📈</span> Event Analytics</a>
+      </nav>
+    </aside>
+    <main class="main-content">
+      <h1>Event Turnout & Feedback Analytics</h1>
+      <div class="card" style="margin-top: 1rem;">
+        <canvas id="organizer-chart" height="100"></canvas>
+      </div>
+    </main>
+  </div>
+  <script src="/js/api.js"></script>
+</body>
+</html>

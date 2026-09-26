@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Event - Organizer Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/auth.css">
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-card" style="max-width: 650px;">
+      <h2>Create New Campus Event</h2>
+      <p class="text-muted">Fill in the details to submit an event for approval.</p>
+      <form id="create-event-form" enctype="multipart/form-data">
+        <div class="form-group">
+          <label>Event Title</label>
+          <input type="text" name="title" required class="form-control" placeholder="e.g. Hackathon 2026">
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <select name="category" class="form-control">
+            <option value="Technical">Technical</option>
+            <option value="Cultural">Cultural</option>
+            <option value="Sports">Sports</option>
+            <option value="Workshop">Workshop</option>
+            <option value="Seminar">Seminar</option>
+            <option value="Hackathon">Hackathon</option>
+            <option value="Competition">Competition</option>
+            <option value="Club Activity">Club Activity</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea name="description" required class="form-control" rows="3"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Date</label>
+            <input type="date" name="date" required class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Time</label>
+            <input type="text" name="time" required class="form-control" placeholder="10:00 AM">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Venue</label>
+            <input type="text" name="venue" required class="form-control" placeholder="Main Auditorium">
+          </div>
+          <div class="form-group">
+            <label>Organizer / Club Name</label>
+            <input type="text" name="organizer" required class="form-control" placeholder="Code Club">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Capacity</label>
+          <input type="number" name="maxParticipants" required min="1" class="form-control" value="100">
+        </div>
+        <div class="form-group">
+          <label>Event Poster Image (Cloudinary Upload)</label>
+          <input type="file" name="poster" accept="image/*" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Event</button>
+      </form>
+    </div>
+  </div>
+  <script src="/js/api.js"></script>
+  <script src="/js/events.js"></script>
+</body>
+</html>

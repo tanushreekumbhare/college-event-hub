@@ -8,6 +8,15 @@ const authRoutes = require('./routes/authRoutes');
 const eventRoutes = require('./routes/eventRoutes');
 const registrationRoutes = require('./routes/registrationRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const attendanceRoutes = require('./routes/attendanceRoutes');
+const feedbackRoutes = require('./routes/feedbackRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
+const certificateRoutes = require('./routes/certificateRoutes');
+const favoriteRoutes = require('./routes/favoriteRoutes');
+const leaderboardRoutes = require('./routes/leaderboardRoutes');
+const clubRoutes = require('./routes/clubRoutes');
+const venueRoutes = require('./routes/venueRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
 
 const app = express();
 
@@ -41,6 +50,15 @@ app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/registrations', registrationRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/attendance', attendanceRoutes);
+app.use('/api/feedback', feedbackRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/certificates', certificateRoutes);
+app.use('/api/favorites', favoriteRoutes);
+app.use('/api/leaderboard', leaderboardRoutes);
+app.use('/api/clubs', clubRoutes);
+app.use('/api/venues', venueRoutes);
+app.use('/api/categories', categoryRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

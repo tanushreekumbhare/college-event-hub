@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scan QR Code Attendance - Organizer</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div class="brand"><h2>Organizer Portal</h2></div>
+      <nav class="sidebar-nav">
+        <a href="/organizer/dashboard.html" class="nav-item"><span class="icon">📊</span> Dashboard</a>
+        <a href="/organizer/attendance.html" class="nav-item active"><span class="icon">🔍</span> QR Scanner</a>
+      </nav>
+    </aside>
+    <main class="main-content">
+      <h1>QR Code Attendance Check-In</h1>
+      <div class="card" style="max-width: 500px;">
+        <h3>Scan or Paste Ticket ID</h3>
+        <p class="text-muted">Enter the student's registration ID from their QR pass.</p>
+        <div class="form-group" style="margin-top: 1rem;">
+          <input type="text" id="scan-registration-id" class="form-control" placeholder="Registration ID (e.g. 65f123...)">
+        </div>
+        <button id="verify-scan-btn" class="btn btn-primary" style="width: 100%;">Verify & Mark Attendance</button>
+        <div id="scan-result" style="margin-top: 1rem;"></div>
+      </div>
+    </main>
+  </div>
+  <script src="/js/api.js"></script>
+  <script src="/js/qr.js"></script>
+</body>
+</html>

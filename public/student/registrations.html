@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Event Passes - College Event Hub</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div class="brand"><h2>Event Hub</h2></div>
+      <nav class="sidebar-nav">
+        <a href="/student/dashboard.html" class="nav-item"><span class="icon">📊</span> Dashboard</a>
+        <a href="/student/registrations.html" class="nav-item active"><span class="icon">🎟️</span> My Registrations</a>
+        <a href="/student/favorites.html" class="nav-item"><span class="icon">⭐</span> Favorites</a>
+        <a href="/student/certificates.html" class="nav-item"><span class="icon">📜</span> Certificates</a>
+        <a href="/student/notifications.html" class="nav-item"><span class="icon">🔔</span> Notifications</a>
+      </nav>
+    </aside>
+    <main class="main-content">
+      <h1>My Event Passes & QR Codes</h1>
+      <div id="registrations-list" class="events-grid">
+        <p>Loading registrations...</p>
+      </div>
+    </main>
+  </div>
+  <script src="/js/api.js"></script>
+  <script src="/js/registration.js"></script>
+</body>
+</html>

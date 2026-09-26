@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Organizer Dashboard - College Event Hub</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div class="brand"><h2>Organizer Portal</h2></div>
+      <nav class="sidebar-nav">
+        <a href="/organizer/dashboard.html" class="nav-item active"><span class="icon">📊</span> Dashboard</a>
+        <a href="/create-event.html" class="nav-item"><span class="icon">➕</span> Create Event</a>
+        <a href="/organizer/events.html" class="nav-item"><span class="icon">📅</span> My Events</a>
+        <a href="/organizer/attendance.html" class="nav-item"><span class="icon">🔍</span> QR Attendance Scanner</a>
+        <a href="/organizer/analytics.html" class="nav-item"><span class="icon">📈</span> Event Analytics</a>
+      </nav>
+    </aside>
+    <main class="main-content">
+      <h1>Event Management Dashboard</h1>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">📅</div>
+          <div class="stat-data"><h3 id="stat-total-events">0</h3><p>Total Events</p></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🎟️</div>
+          <div class="stat-data"><h3 id="stat-registrations">0</h3><p>Registrations</p></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">✅</div>
+          <div class="stat-data"><h3 id="stat-attendance">0</h3><p>Attendance Count</p></div>
+        </div>
+      </div>
+      <section class="section">
+        <h2>Club Events & Registrations</h2>
+        <div id="organizer-events-list">
+          <p>Loading events...</p>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="/js/api.js"></script>
+</body>
+</html>

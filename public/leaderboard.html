@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Leaderboard - College Event Hub</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="navbar">
+    <div class="container nav-container">
+      <a href="/" class="brand">
+        <span class="brand-icon">⚡</span>
+        <span class="brand-text">College Event Hub</span>
+      </a>
+      <nav class="nav-links">
+        <a href="/">Home</a>
+        <a href="/events.html">Browse Events</a>
+        <a href="/leaderboard.html" class="active">Leaderboard</a>
+      </nav>
+      <div id="auth-buttons">
+        <a href="/login.html" class="btn btn-outline">Log In</a>
+        <a href="/register.html" class="btn btn-primary">Sign Up</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container section">
+    <h1>Campus Participation Leaderboard 🏆</h1>
+    <p class="text-muted">Top active students earning participation points through workshops, hackathons, and seminars.</p>
+
+    <div class="card" style="margin-top: 2rem; overflow-x: auto;">
+      <table class="table" style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="border-bottom: 2px solid #e2e8f0; text-align: left;">
+            <th style="padding: 1rem;">Rank</th>
+            <th style="padding: 1rem;">Student Name</th>
+            <th style="padding: 1rem;">Department</th>
+            <th style="padding: 1rem;">Year</th>
+            <th style="padding: 1rem;">Points</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-tbody">
+          <tr><td colspan="5" style="padding: 1rem; text-align: center;" class="text-muted">Loading leaderboard data...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const res = await fetch('/api/leaderboard');
+        const data = await res.json();
+        const tbody = document.getElementById('leaderboard-tbody');
+        if (data.success && data.leaderboard.length > 0) {
+          tbody.innerHTML = data.leaderboard.map((student, idx) => `
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 1rem; font-weight: bold; color: #4f46e5;">#${idx + 1}</td>
+              <td style="padding: 1rem;">${student.name}</td>
+              <td style="padding: 1rem;">${student.department || 'Computer Science'}</td>
+              <td style="padding: 1rem;">${student.year || '1st Year'}</td>
+              <td style="padding: 1rem; font-weight: bold; color: #16a34a;">${student.participationPoints || 0} pts</td>
+            </tr>
+          `).join('');
+        } else {
+          tbody.innerHTML = `<tr><td colspan="5" style="padding: 1rem; text-align: center;">No student records found yet.</td></tr>`;
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>

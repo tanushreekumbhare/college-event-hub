@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Events - Organizer Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div class="brand"><h2>Organizer Portal</h2></div>
+      <nav class="sidebar-nav">
+        <a href="/organizer/dashboard.html" class="nav-item"><span class="icon">📊</span> Dashboard</a>
+        <a href="/organizer/events.html" class="nav-item active"><span class="icon">📅</span> My Events</a>
+      </nav>
+    </aside>
+    <main class="main-content">
+      <h1>Organized Events Catalog</h1>
+      <div id="organizer-events-grid" class="events-grid">
+        <p>Loading events...</p>
+      </div>
+    </main>
+  </div>
+  <script src="/js/api.js"></script>
+</body>
+</html>

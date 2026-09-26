@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Clubs - Admin Console</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div class="brand"><h2>Admin Console</h2></div>
+      <nav class="sidebar-nav">
+        <a href="/admin/dashboard.html" class="nav-item"><span class="icon">📊</span> Overview</a>
+        <a href="/admin/clubs.html" class="nav-item active"><span class="icon">🏛️</span> Clubs</a>
+      </nav>
+    </aside>
+    <main class="main-content">
+      <h1>Campus Clubs Management</h1>
+      <div class="card" id="clubs-container">
+        <p>Loading campus clubs...</p>
+      </div>
+    </main>
+  </div>
+  <script src="/js/api.js"></script>
+</body>
+</html>
