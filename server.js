@@ -109,6 +109,11 @@ const startServer = async () => {
   });
 };
 
+// Auto-connect DB if not in unit test runner
+if (process.env.NODE_ENV !== 'test') {
+  connectDB().catch(err => console.error('Initial DB connection error:', err));
+}
+
 if (require.main === module) {
   startServer();
 }
