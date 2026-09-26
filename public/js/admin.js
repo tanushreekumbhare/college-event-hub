@@ -13,8 +13,77 @@ async function initAdminDashboard() {
   if (!user) return;
 
   loadAdminStats();
+  loadAdminAnalytics();
   loadAdminEventsTable();
 }
+
+async function loadAdminAnalytics() {
+  const topEventsContainer = document.getElementById('analytics-top-events-container');
+  const trendContainer = document.getElementById('analytics-trend-container');
+
+  if (!topEventsContainer && !trendContainer) return;
+
+  try {
+    const res = await fetch('/api/admin/analytics');
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      if (topEventsContainer) topEventsContainer.innerHTML = '<p style="color: var(--text-muted);">No analytics available.</p>';
+      return;
+    }
+
+    const { topEvents, registrationsOverTime } = data.analytics;
+
+    // Render Top Events Bar Chart
+    if (topEventsContainer) {
+      if (!topEvents || topEvents.length === 0) {
+        topEventsContainer.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">No event signups recorded yet.</p>';
+      } else {
+        const maxSignups = Math.max(...topEvents.map(e => e.signupCount), 1);
+        topEventsContainer.innerHTML = topEvents.map(item => {
+          const percentage = Math.round((item.signupCount / maxSignups) * 100);
+          return `
+            <div style="margin-bottom: 0.85rem;">
+              <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.25rem;">
+                <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 75%;">${escapeHtml(item.title)}</span>
+                <span style="color: var(--primary);">${item.signupCount} signups</span>
+              </div>
+              <div style="background-color: var(--border-color); height: 10px; border-radius: 5px; overflow: hidden;">
+                <div style="width: ${percentage}%; background-color: var(--primary); height: 100%; border-radius: 5px; transition: width 0.5s ease;"></div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    // Render Daily Trend Chart
+    if (trendContainer) {
+      if (!registrationsOverTime || registrationsOverTime.length === 0) {
+        trendContainer.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">No signup trend data recorded yet.</p>';
+      } else {
+        const maxDaily = Math.max(...registrationsOverTime.map(d => d.count), 1);
+        trendContainer.innerHTML = `
+          <div style="display: flex; align-items: flex-end; gap: 0.5rem; height: 130px; padding-top: 1rem;">
+            ${registrationsOverTime.map(d => {
+              const heightPct = Math.round((d.count / maxDaily) * 100);
+              return `
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end;" title="${d._id}: ${d.count} signups">
+                  <div style="font-size: 0.75rem; font-weight: 700; color: var(--primary); margin-bottom: 2px;">${d.count}</div>
+                  <div style="width: 100%; background-color: #6366f1; height: ${Math.max(heightPct, 15)}%; border-radius: 4px 4px 0 0;"></div>
+                  <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 4px; transform: rotate(-30deg); transform-origin: left top;">${d._id.slice(5)}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+      }
+    }
+  } catch (err) {
+    console.error('Error loading analytics:', err);
+  }
+}
+
 
 async function loadAdminStats() {
   try {
@@ -161,6 +230,12 @@ async function viewEventRegistrations(eventId) {
     }
 
     modalBody.innerHTML = `
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <span style="color: var(--text-muted); font-size: 0.9rem; font-weight: 600;">Enrolled Roster (${registrations.length} Students)</span>
+        <a href="/api/admin/events/${eventId}/export-csv" target="_blank" class="btn btn-secondary btn-sm">
+          📥 Export CSV Roster
+        </a>
+      </div>
       <div class="table-responsive">
         <table class="data-table">
           <thead>
@@ -169,6 +244,7 @@ async function viewEventRegistrations(eventId) {
               <th>Student Name</th>
               <th>College Email</th>
               <th>Registered At</th>
+              <th>Attendance Status</th>
             </tr>
           </thead>
           <tbody>
@@ -176,12 +252,17 @@ async function viewEventRegistrations(eventId) {
               const regDate = new Date(reg.registeredAt).toLocaleString();
               const studentName = reg.student ? escapeHtml(reg.student.name) : 'Unknown';
               const studentEmail = reg.student ? escapeHtml(reg.student.email) : 'N/A';
+              const statusBadge = reg.attended
+                ? `<span style="color: #065f46; background-color: #d1fae5; padding: 2px 8px; border-radius: 4px; font-weight: 700; font-size: 0.8rem;">Present</span>`
+                : `<span style="color: var(--text-muted); font-size: 0.8rem;">Registered</span>`;
+
               return `
                 <tr>
                   <td>${idx + 1}</td>
                   <td><strong>${studentName}</strong></td>
                   <td>${studentEmail}</td>
                   <td style="font-size: 0.85rem; color: var(--text-muted);">${regDate}</td>
+                  <td>${statusBadge}</td>
                 </tr>
               `;
             }).join('')}

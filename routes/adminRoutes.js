@@ -203,6 +203,126 @@ router.post('/verify-attendance', requireDB, isAdmin, async (req, res) => {
   }
 });
 
+// @route   GET /api/admin/analytics
+// @desc    Get detailed MongoDB aggregation analytics (top events, registrations over time, categories)
+// @access  Admin only
+router.get('/analytics', requireDB, isAdmin, async (req, res) => {
+  try {
+    // 1. Top events by signup count
+    const topEventsAggregation = await Registration.aggregate([
+      {
+        $group: {
+          _id: '$event',
+          signupCount: { $sum: 1 }
+        }
+      },
+      { $sort: { signupCount: -1 } },
+      { $limit: 5 },
+      {
+        $lookup: {
+          from: 'events',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'eventDetails'
+        }
+      },
+      { $unwind: '$eventDetails' },
+      {
+        $project: {
+          _id: 1,
+          signupCount: 1,
+          title: '$eventDetails.title',
+          category: '$eventDetails.category',
+          maxParticipants: '$eventDetails.maxParticipants'
+        }
+      }
+    ]);
+
+    // 2. Registrations over time (grouped by day)
+    const registrationsOverTime = await Registration.aggregate([
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: '%Y-%m-%d', date: '$registeredAt' }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } },
+      { $limit: 14 }
+    ]);
+
+    // 3. Category breakdown
+    const categoryBreakdown = await Event.aggregate([
+      {
+        $group: {
+          _id: '$category',
+          totalEvents: { $sum: 1 }
+        }
+      }
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      analytics: {
+        topEvents: topEventsAggregation,
+        registrationsOverTime,
+        categoryBreakdown
+      }
+    });
+  } catch (error) {
+    console.error('Analytics aggregation error:', error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Server error generating analytics aggregation.'
+    });
+  }
+});
+
+// @route   GET /api/admin/events/:id/export-csv
+// @desc    Export attendee roster for a specific event as downloadable CSV
+// @access  Admin only
+router.get('/events/:id/export-csv', requireDB, isAdmin, async (req, res) => {
+  try {
+    const event = await Event.findById(req.params.id);
+    if (!event) {
+      return res.status(404).json({
+        success: false,
+        message: 'Event not found.'
+      });
+    }
+
+    const registrations = await Registration.find({ event: event._id })
+      .populate('student', 'name email createdAt')
+      .sort({ registeredAt: -1 });
+
+    const safeTitle = event.title.replace(/[^a-zA-Z0-9]/g, '_');
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', `attachment; filename="Attendee_Roster_${safeTitle}.csv"`);
+
+    let csvContent = `Index,Student Name,College Email,Registration Date,Attendance Status,Checked-In At\n`;
+
+    registrations.forEach((reg, idx) => {
+      const name = reg.student ? `"${reg.student.name.replace(/"/g, '""')}"` : 'Unknown';
+      const email = reg.student ? reg.student.email : 'N/A';
+      const regDate = new Date(reg.registeredAt).toISOString();
+      const status = reg.attended ? 'Present' : 'Registered';
+      const checkinDate = reg.attendedAt ? new Date(reg.attendedAt).toISOString() : 'N/A';
+
+      csvContent += `${idx + 1},${name},${email},${regDate},${status},${checkinDate}\n`;
+    });
+
+    return res.send(csvContent);
+  } catch (error) {
+    console.error('Export CSV error:', error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Server error exporting CSV attendee roster.'
+    });
+  }
+});
+
 module.exports = router;
+
 
 
