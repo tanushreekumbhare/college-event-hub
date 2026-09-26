@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Event = require('../models/Event');
 const Registration = require('../models/Registration');
-const { requireDB, isAdmin } = require('../middleware/authMiddleware');
+const { requireDB, isOrganizerOrAdmin, isAdmin } = require('../middleware/authMiddleware');
 
 // @route   GET /api/events
 // @desc    Get all events with search, category filtering, and registration counts
@@ -114,8 +114,8 @@ const { upload, uploadToCloudinary } = require('../config/cloudinary');
 
 // @route   POST /api/events
 // @desc    Create a new event with optional Cloudinary image upload
-// @access  Admin only
-router.post('/', requireDB, isAdmin, upload.single('image'), async (req, res) => {
+// @access  Organizer or Admin
+router.post('/', requireDB, isOrganizerOrAdmin, upload.single('image'), async (req, res) => {
   try {
     const {
       title,
@@ -182,8 +182,8 @@ router.post('/', requireDB, isAdmin, upload.single('image'), async (req, res) =>
 
 // @route   PUT /api/events/:id
 // @desc    Update an existing event with optional Cloudinary image upload
-// @access  Admin only
-router.put('/:id', requireDB, isAdmin, upload.single('image'), async (req, res) => {
+// @access  Organizer or Admin
+router.put('/:id', requireDB, isOrganizerOrAdmin, upload.single('image'), async (req, res) => {
   try {
     const {
       title,
@@ -249,8 +249,8 @@ router.put('/:id', requireDB, isAdmin, upload.single('image'), async (req, res) 
 
 // @route   DELETE /api/events/:id
 // @desc    Delete an event and its registrations
-// @access  Admin only
-router.delete('/:id', requireDB, isAdmin, async (req, res) => {
+// @access  Organizer or Admin
+router.delete('/:id', requireDB, isOrganizerOrAdmin, async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
     if (!event) {

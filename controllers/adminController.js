@@ -3,6 +3,7 @@ const Registration = require('../models/Registration');
 const User = require('../models/User');
 const Attendance = require('../models/Attendance');
 const Feedback = require('../models/Feedback');
+const bcrypt = require('bcryptjs');
 const { createNotification } = require('../services/notificationService');
 
 exports.getAdminDashboard = async (req, res) => {
@@ -110,5 +111,61 @@ exports.toggleSuspendUser = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Error toggling user suspension.' });
+  }
+};
+
+exports.createOrganizer = async (req, res) => {
+  try {
+    const { name, email, password, department } = req.body;
+    if (!name || !email || !password) {
+      return res.status(400).json({ success: false, message: 'Name, email, and password are required.' });
+    }
+
+    const existing = await User.findOne({ email: email.toLowerCase().trim() });
+    if (existing) {
+      return res.status(400).json({ success: false, message: 'An account with this email already exists.' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const organizer = await User.create({
+      name: name.trim(),
+      email: email.toLowerCase().trim(),
+      password: hashedPassword,
+      role: 'organizer',
+      department: department || 'Computer Science'
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'New Organizer account created successfully!',
+      user: {
+        id: organizer._id,
+        name: organizer.name,
+        email: organizer.email,
+        role: organizer.role
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message || 'Error creating organizer account.' });
+  }
+};
+
+exports.changeUserRole = async (req, res) => {
+  try {
+    const { role } = req.body;
+    if (!['student', 'organizer', 'admin'].includes(role)) {
+      return res.status(400).json({ success: false, message: 'Invalid role specified.' });
+    }
+
+    const user = await User.findByIdAndUpdate(req.params.id, { role }, { new: true }).select('-password');
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found.' });
+    }
+
+    res.status(200).json({ success: true, message: `User role updated to ${role} successfully.`, user });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error updating user role.' });
   }
 };

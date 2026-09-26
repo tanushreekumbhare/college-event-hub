@@ -382,8 +382,11 @@ async function deleteEvent(eventId, eventTitle) {
 // -------------------------------------------------------------
 
 async function initEventForm() {
-  const user = await enforceAuth('admin');
-  if (!user) return;
+  const user = await getCurrentUser();
+  if (!user || (user.role !== 'admin' && user.role !== 'organizer')) {
+    window.location.href = 'login.html';
+    return;
+  }
 
   const urlParams = new URLSearchParams(window.location.search);
   const eventId = urlParams.get('id');
