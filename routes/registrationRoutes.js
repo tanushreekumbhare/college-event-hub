@@ -4,6 +4,8 @@ const Registration = require('../models/Registration');
 const Event = require('../models/Event');
 const { requireDB, isStudent } = require('../middleware/authMiddleware');
 
+const { sendRegistrationEmail, sendCancellationEmail } = require('../config/mailer');
+
 // @route   POST /api/registrations
 // @desc    Register a student for an event
 // @access  Student only
@@ -58,9 +60,20 @@ router.post('/', requireDB, isStudent, async (req, res) => {
 
     await registration.save();
 
+    // 5. Send confirmation email (asynchronous, non-blocking)
+    sendRegistrationEmail({
+      toEmail: req.session.user.email,
+      studentName: req.session.user.name,
+      eventTitle: event.title,
+      eventDate: event.date,
+      eventTime: event.time,
+      eventVenue: event.venue,
+      eventOrganizer: event.organizer
+    }).catch(err => console.error('Email error:', err));
+
     return res.status(201).json({
       success: true,
-      message: 'Registration successful! You have secured your spot.',
+      message: 'Registration successful! Confirmation email has been sent to your college inbox.',
       registration
     });
   } catch (error) {
@@ -114,7 +127,7 @@ router.get('/my', requireDB, isStudent, async (req, res) => {
 router.delete('/:id', requireDB, isStudent, async (req, res) => {
   try {
     const studentId = req.session.user.id;
-    const registration = await Registration.findById(req.params.id);
+    const registration = await Registration.findById(req.params.id).populate('event');
 
     if (!registration) {
       return res.status(404).json({
@@ -133,9 +146,18 @@ router.delete('/:id', requireDB, isStudent, async (req, res) => {
 
     await Registration.findByIdAndDelete(req.params.id);
 
+    // Send cancellation confirmation email (asynchronous, non-blocking)
+    if (registration.event) {
+      sendCancellationEmail({
+        toEmail: req.session.user.email,
+        studentName: req.session.user.name,
+        eventTitle: registration.event.title
+      }).catch(err => console.error('Cancellation email error:', err));
+    }
+
     return res.status(200).json({
       success: true,
-      message: 'Registration cancelled successfully.'
+      message: 'Registration cancelled successfully. Cancellation notice sent to your email.'
     });
   } catch (error) {
     console.error('Cancel registration error:', error);
@@ -145,5 +167,6 @@ router.delete('/:id', requireDB, isStudent, async (req, res) => {
     });
   }
 });
+
 
 module.exports = router;
