@@ -24,7 +24,8 @@ const connectDB = async () => {
   try {
     const conn = await mongoose.connect(uri, {
       serverSelectionTimeoutMS: 10000,
-      connectTimeoutMS: 10000
+      connectTimeoutMS: 10000,
+      family: 4
     });
     isConnected = true;
     console.log(`[College Event Hub] MongoDB Connected: ${conn.connection.host}`);
@@ -37,7 +38,10 @@ const connectDB = async () => {
 };
 
 const checkDBStatus = () => {
-  return mongoose.connection.readyState === 1;
+  if (mongoose.connection.readyState === 0 && process.env.MONGODB_URI !== 'OFFLINE_TEST_MODE') {
+    connectDB().catch(() => {});
+  }
+  return mongoose.connection.readyState === 1 || isConnected;
 };
 
 module.exports = {
