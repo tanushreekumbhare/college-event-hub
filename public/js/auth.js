@@ -47,16 +47,23 @@ async function renderNavbar() {
     if (navLinksContainer) {
       if (user.role === 'admin') {
         navLinksContainer.innerHTML = `
-          <li><a href="index.html" class="nav-link">Home</a></li>
-          <li><a href="events.html" class="nav-link">All Events</a></li>
-          <li><a href="admin-dashboard.html" class="nav-link">Admin Dashboard</a></li>
-          <li><a href="create-event.html" class="nav-link">+ Create Event</a></li>
+          <li><a href="/index.html" class="nav-link">Home</a></li>
+          <li><a href="/events.html" class="nav-link">All Events</a></li>
+          <li><a href="/admin-dashboard.html" class="nav-link">Admin Dashboard</a></li>
+          <li><a href="/create-event.html" class="nav-link">+ Create Event</a></li>
+        `;
+      } else if (user.role === 'organizer') {
+        navLinksContainer.innerHTML = `
+          <li><a href="/index.html" class="nav-link">Home</a></li>
+          <li><a href="/events.html" class="nav-link">Browse Events</a></li>
+          <li><a href="/organizer/dashboard.html" class="nav-link">Organizer Dashboard</a></li>
+          <li><a href="/create-event.html" class="nav-link">+ Create Event</a></li>
         `;
       } else {
         navLinksContainer.innerHTML = `
-          <li><a href="index.html" class="nav-link">Home</a></li>
-          <li><a href="events.html" class="nav-link">Browse Events</a></li>
-          <li><a href="student-dashboard.html" class="nav-link">My Dashboard</a></li>
+          <li><a href="/index.html" class="nav-link">Home</a></li>
+          <li><a href="/events.html" class="nav-link">Browse Events</a></li>
+          <li><a href="/student-dashboard.html" class="nav-link">My Dashboard</a></li>
         `;
       }
     }
@@ -94,8 +101,13 @@ async function enforceAuth(requiredRole = null) {
   }
 
   if (requiredRole && user.role !== requiredRole) {
-    alert(`Access denied. This page is restricted to ${requiredRole}s.`);
-    window.location.href = user.role === 'admin' ? 'admin-dashboard.html' : 'student-dashboard.html';
+    if (user.role === 'organizer') {
+      window.location.href = '/organizer/dashboard.html';
+    } else if (user.role === 'admin') {
+      window.location.href = '/admin-dashboard.html';
+    } else {
+      window.location.href = '/student-dashboard.html';
+    }
     return null;
   }
 
@@ -140,6 +152,8 @@ async function handleLoginSubmit(event) {
     setTimeout(() => {
       if (data.user.role === 'admin') {
         window.location.href = 'admin-dashboard.html';
+      } else if (data.user.role === 'organizer') {
+        window.location.href = '/organizer/dashboard.html';
       } else {
         // Redirect to requested page or student dashboard
         const urlParams = new URLSearchParams(window.location.search);

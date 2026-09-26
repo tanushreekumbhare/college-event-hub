@@ -36,10 +36,10 @@ const seedData = async () => {
 
     console.log('Cleared previous database collections.');
 
-    // Passwords
-    const adminPassword = await bcrypt.hash('AdminPassword2026!', 10);
-    const orgPassword = await bcrypt.hash('OrganizerPassword2026!', 10);
-    const studentPassword = await bcrypt.hash('StudentPassword2026!', 10);
+    // Passwords (easy to type)
+    const adminPassword = await bcrypt.hash('Admin1234', 10);
+    const orgPassword = await bcrypt.hash('Organizer1234', 10);
+    const studentPassword = await bcrypt.hash('Student1234', 10);
 
     // 1. Create Admin
     const admin = await User.create({
@@ -244,9 +244,9 @@ const seedData = async () => {
     console.log('\n=============================================================');
     console.log('✅ SEED COMPLETED SUCCESSFULLY!');
     console.log('Demo Accounts Created:');
-    console.log('  Admin:     admin@college.edu / AdminPassword2026!');
-    console.log('  Organizer: organizer@college.edu / OrganizerPassword2026!');
-    console.log('  Student:   student@college.edu / StudentPassword2026!');
+    console.log('  Admin:     admin@college.edu / Admin1234');
+    console.log('  Organizer: organizer@college.edu / Organizer1234');
+    console.log('  Student:   student@college.edu / Student1234');
     console.log('=============================================================\n');
 
     process.exit(0);
