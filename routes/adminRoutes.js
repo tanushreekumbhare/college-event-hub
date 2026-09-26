@@ -138,5 +138,71 @@ router.post('/create-admin', requireDB, isAdmin, async (req, res) => {
   }
 });
 
+// @route   POST /api/admin/verify-attendance
+// @desc    Scan/verify registration ID from QR code and mark attendance
+// @access  Admin only
+router.post('/verify-attendance', requireDB, isAdmin, async (req, res) => {
+  try {
+    let { registrationId } = req.body;
+
+    if (!registrationId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Registration ID or raw QR payload is required.'
+      });
+    }
+
+    // Handle JSON payload string if raw QR text was scanned
+    registrationId = registrationId.trim();
+    if (registrationId.startsWith('{')) {
+      try {
+        const parsed = JSON.parse(registrationId);
+        if (parsed.registrationId) {
+          registrationId = parsed.registrationId;
+        }
+      } catch (e) {
+        // Fallthrough if not valid JSON
+      }
+    }
+
+    const registration = await Registration.findById(registrationId)
+      .populate('student', 'name email')
+      .populate('event', 'title date time venue');
+
+    if (!registration) {
+      return res.status(404).json({
+        success: false,
+        message: 'Invalid Ticket: Registration record not found in database.'
+      });
+    }
+
+    if (registration.attended) {
+      return res.status(400).json({
+        success: false,
+        alreadyAttended: true,
+        message: `Already Checked-In: Student '${registration.student ? registration.student.name : 'Student'}' was already marked present on ${new Date(registration.attendedAt).toLocaleString()}.`,
+        registration
+      });
+    }
+
+    registration.attended = true;
+    registration.attendedAt = new Date();
+    await registration.save();
+
+    return res.status(200).json({
+      success: true,
+      message: `Check-in Verified! Marked attendance for ${registration.student ? registration.student.name : 'Student'} (${registration.event ? registration.event.title : 'Event'}).`,
+      registration
+    });
+  } catch (error) {
+    console.error('Verify attendance error:', error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Server error processing attendance verification.'
+    });
+  }
+});
+
 module.exports = router;
+
 

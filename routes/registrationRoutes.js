@@ -169,4 +169,56 @@ router.delete('/:id', requireDB, isStudent, async (req, res) => {
 });
 
 
+const QRCode = require('qrcode');
+
+// @route   GET /api/registrations/:id/qrcode
+// @desc    Generate and return QR code Data URL encoding registration ID
+// @access  Student only (or owner/admin)
+router.get('/:id/qrcode', requireDB, async (req, res) => {
+  try {
+    const registration = await Registration.findById(req.params.id).populate('event');
+
+    if (!registration) {
+      return res.status(404).json({
+        success: false,
+        message: 'Registration record not found.'
+      });
+    }
+
+    // Ensure session user owns registration or is admin
+    if (!req.session || !req.session.user || (req.session.user.role === 'student' && registration.student.toString() !== req.session.user.id)) {
+      return res.status(403).json({
+        success: false,
+        message: 'Unauthorized access to QR ticket.'
+      });
+    }
+
+    const qrPayload = JSON.stringify({
+      registrationId: registration._id,
+      eventTitle: registration.event ? registration.event.title : 'College Event'
+    });
+
+    const qrDataUrl = await QRCode.toDataURL(qrPayload, {
+      errorCorrectionLevel: 'H',
+      margin: 2,
+      width: 280
+    });
+
+    return res.status(200).json({
+      success: true,
+      registrationId: registration._id,
+      attended: registration.attended,
+      attendedAt: registration.attendedAt,
+      qrDataUrl
+    });
+  } catch (error) {
+    console.error('QR Code generation error:', error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Server error generating QR code.'
+    });
+  }
+});
+
 module.exports = router;
+

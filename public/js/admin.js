@@ -202,6 +202,73 @@ function closeRegistrationsModal() {
   if (modal) modal.classList.remove('active');
 }
 
+// Open / Close QR Verification Modal
+function openVerifyAttendanceModal() {
+  const modal = document.getElementById('verify-attendance-modal');
+  const alertEl = document.getElementById('verify-modal-alert');
+  const inputEl = document.getElementById('ticketRegistrationId');
+
+  if (!modal) return;
+  if (alertEl) alertEl.innerHTML = '';
+  if (inputEl) inputEl.value = '';
+
+  modal.classList.add('active');
+  if (inputEl) inputEl.focus();
+}
+
+function closeVerifyAttendanceModal() {
+  const modal = document.getElementById('verify-attendance-modal');
+  if (modal) modal.classList.remove('active');
+}
+
+async function handleVerifyTicketSubmit(e) {
+  e.preventDefault();
+  clearAlert('verify-modal-alert');
+
+  const inputEl = document.getElementById('ticketRegistrationId');
+  const submitBtn = document.getElementById('verify-submit-btn');
+  const registrationId = inputEl ? inputEl.value.trim() : '';
+
+  if (!registrationId) {
+    showAlert('verify-modal-alert', 'Please enter or scan a registration ID.');
+    return;
+  }
+
+  try {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Verifying...';
+
+    const res = await fetch('/api/admin/verify-attendance', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ registrationId })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      showAlert('verify-modal-alert', data.message || 'Verification failed.', 'error');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Verify & Mark Present';
+      return;
+    }
+
+    showAlert('verify-modal-alert', data.message, 'success');
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Verify & Mark Present';
+    if (inputEl) inputEl.value = '';
+
+    loadAdminStats();
+    loadAdminEventsTable();
+  } catch (err) {
+    console.error('Error verifying attendance:', err);
+    showAlert('verify-modal-alert', 'Network error during verification.', 'error');
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Verify & Mark Present';
+  }
+}
+
+
 // Delete Event
 async function deleteEvent(eventId, eventTitle) {
   if (!confirm(`Are you sure you want to delete the event "${eventTitle}"? All associated registrations will also be deleted.`)) {

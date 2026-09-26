@@ -112,8 +112,11 @@ function renderRegistrationCard(reg) {
           </div>
         </div>
 
-        <div style="display: flex; gap: 0.5rem; margin-top: auto;">
-          <a href="event-details.html?id=${event._id}" class="btn btn-outline btn-sm" style="flex: 1;">
+        <div style="display: flex; gap: 0.5rem; margin-top: auto; flex-wrap: wrap;">
+          <button onclick="showQrTicket('${reg._id}')" class="btn btn-primary btn-sm" style="flex: 1;">
+            🎟️ QR Ticket
+          </button>
+          <a href="event-details.html?id=${event._id}" class="btn btn-outline btn-sm">
             Details
           </a>
           <button onclick="handleCancelMyRegistration('${reg._id}')" class="btn btn-danger btn-sm">
@@ -123,6 +126,60 @@ function renderRegistrationCard(reg) {
       </div>
     </div>
   `;
+}
+
+async function showQrTicket(registrationId) {
+  const modal = document.getElementById('qr-modal');
+  const modalBody = document.getElementById('qr-modal-body');
+
+  if (!modal || !modalBody) return;
+
+  modal.classList.add('active');
+  modalBody.innerHTML = `
+    <div style="padding: 1.5rem; color: var(--text-muted);">
+      Loading your entry QR code...
+    </div>
+  `;
+
+  try {
+    const res = await fetch(`/api/registrations/${registrationId}/qrcode`);
+    const data = await res.json();
+
+    if (!res.ok) {
+      modalBody.innerHTML = `
+        <div class="alert alert-error">${data.message || 'Error generating ticket.'}</div>
+      `;
+      return;
+    }
+
+    const attendanceBadge = data.attended
+      ? `<div style="background-color: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; padding: 0.5rem; border-radius: 6px; font-weight: 700; margin-top: 1rem;">
+           ✅ Checked In on ${new Date(data.attendedAt).toLocaleString()}
+         </div>`
+      : `<div style="background-color: #fef3c7; color: #92400e; border: 1px solid #fcd34d; padding: 0.5rem; border-radius: 6px; font-weight: 600; margin-top: 1rem;">
+           ⌛ Show this QR code to event administrator at entry
+         </div>`;
+
+    modalBody.innerHTML = `
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <img src="${data.qrDataUrl}" alt="QR Ticket" style="width: 220px; height: 220px; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; background: white;">
+        <div style="font-family: monospace; font-size: 0.85rem; color: var(--text-muted); margin-top: 0.75rem;">
+          Ticket ID: ${data.registrationId}
+        </div>
+        ${attendanceBadge}
+      </div>
+    `;
+  } catch (err) {
+    console.error('Error opening QR ticket:', err);
+    modalBody.innerHTML = `
+      <div class="alert alert-error">Network error: Could not fetch QR ticket.</div>
+    `;
+  }
+}
+
+function closeQrModal() {
+  const modal = document.getElementById('qr-modal');
+  if (modal) modal.classList.remove('active');
 }
 
 async function handleCancelMyRegistration(registrationId) {
@@ -149,3 +206,4 @@ async function handleCancelMyRegistration(registrationId) {
     alert('Network error while cancelling registration.');
   }
 }
+

@@ -29,7 +29,8 @@
     "express-session": "^1.18.1",
     "mongoose": "^8.8.4",
     "multer": "^2.4.0",
-    "nodemailer": "^10.0.10"
+    "nodemailer": "^10.0.10",
+    "qrcode": "^1.5.4"
   },
   "devDependencies": {
     "supertest": "^7.3.0"

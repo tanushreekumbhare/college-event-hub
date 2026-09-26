@@ -44,9 +44,14 @@
           </p>
         </div>
 
-        <a href="create-event.html" class="btn btn-primary btn-lg">
-          + Create New Event
-        </a>
+        <div style="display: flex; gap: 0.75rem;">
+          <button onclick="openVerifyAttendanceModal()" class="btn btn-secondary btn-lg">
+            🔍 Verify QR Ticket
+          </button>
+          <a href="create-event.html" class="btn btn-primary btn-lg">
+            + Create New Event
+          </a>
+        </div>
       </div>
 
       <!-- Stat Cards Grid -->
@@ -133,6 +138,38 @@
       </div>
       <div class="modal-footer">
         <button onclick="closeRegistrationsModal()" class="btn btn-outline btn-sm">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- QR Attendance Scanner Modal -->
+  <div id="verify-attendance-modal" class="modal-overlay">
+    <div class="modal-container" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.2rem; font-weight: 700;">🔍 Verify QR Attendance Ticket</h3>
+        <button onclick="closeVerifyAttendanceModal()" class="btn btn-outline btn-sm" style="border: none; font-size: 1.2rem; cursor: pointer;">
+          ✕
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="verify-modal-alert"></div>
+        <form id="verify-ticket-form" onsubmit="handleVerifyTicketSubmit(event)">
+          <div class="form-group">
+            <label for="ticketRegistrationId">Registration ID or Scanned QR Payload *</label>
+            <input
+              type="text"
+              id="ticketRegistrationId"
+              class="form-control"
+              placeholder="e.g. 66f5c8d21b4a7e0012fef1a9"
+              required
+            >
+            <div class="form-help">Enter or paste the registration ID / QR code text payload.</div>
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+            <button type="button" onclick="closeVerifyAttendanceModal()" class="btn btn-outline btn-sm">Cancel</button>
+            <button type="submit" id="verify-submit-btn" class="btn btn-primary btn-sm">Verify & Mark Present</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

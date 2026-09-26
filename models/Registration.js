@@ -14,6 +14,14 @@ const registrationSchema = new mongoose.Schema({
   registeredAt: {
     type: Date,
     default: Date.now
+  },
+  attended: {
+    type: Boolean,
+    default: false
+  },
+  attendedAt: {
+    type: Date,
+    default: null
   }
 });
 
