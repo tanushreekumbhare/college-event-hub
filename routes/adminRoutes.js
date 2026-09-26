@@ -76,4 +76,67 @@ router.get('/events/:id/registrations', requireDB, isAdmin, async (req, res) => 
   }
 });
 
+// @route   POST /api/admin/create-admin
+// @desc    Create a new admin account (Admin only)
+// @access  Admin only
+router.post('/create-admin', requireDB, isAdmin, async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide all required fields: name, email, and password.'
+      });
+    }
+
+    if (password.length < 8 || !/\d/.test(password)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password must be at least 8 characters long and contain at least one number.'
+      });
+    }
+
+    const normalizedEmail = email.toLowerCase().trim();
+    const existingUser = await User.findOne({ email: normalizedEmail });
+    if (existingUser) {
+      return res.status(400).json({
+        success: false,
+        message: 'An account with this email address already exists.'
+      });
+    }
+
+    const bcrypt = require('bcryptjs');
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const newAdmin = new User({
+      name: name.trim(),
+      email: normalizedEmail,
+      password: hashedPassword,
+      role: 'admin'
+    });
+
+    await newAdmin.save();
+
+    return res.status(201).json({
+      success: true,
+      message: 'New Admin account created successfully!',
+      user: {
+        id: newAdmin._id,
+        name: newAdmin.name,
+        email: newAdmin.email,
+        role: newAdmin.role
+      }
+    });
+  } catch (error) {
+    console.error('Create admin error:', error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Server error creating admin account.'
+    });
+  }
+});
+
 module.exports = router;
+

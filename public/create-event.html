@@ -137,14 +137,24 @@
           </div>
 
           <div class="form-group">
-            <label for="imageUrl">Banner Image URL (Optional)</label>
+            <label for="imageFile">Upload Event Poster / Banner (Cloudinary Upload)</label>
+            <input
+              type="file"
+              id="imageFile"
+              class="form-control"
+              accept="image/*"
+            >
+            <div class="form-help">Upload an image file (PNG, JPG, WEBP max 5MB) to upload directly to Cloudinary, or enter a direct URL below.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="imageUrl">Or Banner Image URL (Optional Fallback)</label>
             <input
               type="url"
               id="imageUrl"
               class="form-control"
               placeholder="e.g. https://images.unsplash.com/photo-..."
             >
-            <div class="form-help">Leave blank to use a default high-resolution campus banner.</div>
           </div>
 
           <div class="form-group">

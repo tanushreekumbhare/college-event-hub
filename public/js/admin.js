@@ -297,36 +297,59 @@ async function handleEventFormSubmit(e, eventId) {
   const imageUrl = document.getElementById('imageUrl').value.trim();
   const description = document.getElementById('description').value.trim();
 
+  const imageFileInput = document.getElementById('imageFile');
+  const hasFile = imageFileInput && imageFileInput.files && imageFileInput.files.length > 0;
+
   if (!title || !category || !date || !time || !venue || !organizer || !maxParticipants || !description) {
     showAlert('form-alert', 'Please complete all required fields.');
     return;
   }
 
-  const payload = {
-    title,
-    category,
-    date,
-    time,
-    venue,
-    organizer,
-    maxParticipants,
-    imageUrl,
-    description
-  };
-
   try {
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Saving...';
+    submitBtn.textContent = 'Saving & Uploading...';
 
     const url = eventId ? `/api/events/${eventId}` : '/api/events';
     const method = eventId ? 'PUT' : 'POST';
 
-    const res = await fetch(url, {
-      method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
+    let options = {};
 
+    if (hasFile) {
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('category', category);
+      formData.append('date', date);
+      formData.append('time', time);
+      formData.append('venue', venue);
+      formData.append('organizer', organizer);
+      formData.append('maxParticipants', maxParticipants);
+      formData.append('description', description);
+      formData.append('imageUrl', imageUrl);
+      formData.append('image', imageFileInput.files[0]);
+
+      options = {
+        method,
+        body: formData
+      };
+    } else {
+      options = {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title,
+          category,
+          date,
+          time,
+          venue,
+          organizer,
+          maxParticipants,
+          imageUrl,
+          description
+        })
+      };
+    }
+
+    const res = await fetch(url, options);
     const data = await res.json();
 
     if (!res.ok) {
@@ -347,3 +370,4 @@ async function handleEventFormSubmit(e, eventId) {
     submitBtn.textContent = eventId ? 'Save Changes' : 'Create Event';
   }
 }
+

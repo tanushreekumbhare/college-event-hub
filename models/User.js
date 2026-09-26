@@ -21,7 +21,14 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'Please provide a password'],
-    minlength: [6, 'Password must be at least 6 characters']
+    minlength: [8, 'Password must be at least 8 characters'],
+    validate: {
+      validator: function (v) {
+        // Enforce at least one number when setting a plain or hashed password
+        return v.length >= 8 && (/\d/.test(v) || v.startsWith('$2a$') || v.startsWith('$2b$'));
+      },
+      message: 'Password must contain at least one number'
+    }
   },
   role: {
     type: String,
@@ -42,3 +49,4 @@ userSchema.methods.toJSON = function () {
 };
 
 module.exports = mongoose.model('User', userSchema);
+

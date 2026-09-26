@@ -1,8 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
+const rateLimit = require('express-rate-limit');
 const User = require('../models/User');
 const { requireDB } = require('../middleware/authMiddleware');
+
+// Rate limiter for login endpoint: 5 attempts per 15 minutes per IP
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // Limit each IP to 5 requests per windowMs
+  message: {
+    success: false,
+    message: 'Too many login attempts. Please try again after 15 minutes.'
+  },
+  standardHeaders: true,
+  legacyHeaders: false
+});
 
 // @route   POST /api/auth/register
 // @desc    Register a new student account
@@ -19,10 +32,11 @@ router.post('/register', requireDB, async (req, res) => {
       });
     }
 
-    if (password.length < 6) {
+    // Enforce password rules: minimum 8 characters, at least one number
+    if (password.length < 8 || !/\d/.test(password)) {
       return res.status(400).json({
         success: false,
-        message: 'Password must be at least 6 characters long.'
+        message: 'Password must be at least 8 characters long and contain at least one number.'
       });
     }
 
@@ -32,7 +46,7 @@ router.post('/register', requireDB, async (req, res) => {
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        message: 'An account with this email already exists.'
+        message: 'An account with this email address is already registered.'
       });
     }
 
@@ -40,7 +54,7 @@ router.post('/register', requireDB, async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create user
+    // Create user (Strictly hardcode role to 'student', ignoring any req.body.role)
     const newUser = new User({
       name: name.trim(),
       email: normalizedEmail,
@@ -74,8 +88,8 @@ router.post('/register', requireDB, async (req, res) => {
 
 // @route   POST /api/auth/login
 // @desc    Authenticate user & establish session
-// @access  Public
-router.post('/login', requireDB, async (req, res) => {
+// @access  Public (Rate limited)
+router.post('/login', requireDB, loginLimiter, async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -89,10 +103,11 @@ router.post('/login', requireDB, async (req, res) => {
     const normalizedEmail = email.toLowerCase().trim();
     const user = await User.findOne({ email: normalizedEmail });
 
+    // Prevent user enumeration by using a generic error message for both non-existent user and wrong password
     if (!user) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid credentials. User not found.'
+        message: 'Invalid email or password.'
       });
     }
 
@@ -100,7 +115,7 @@ router.post('/login', requireDB, async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid credentials. Incorrect password.'
+        message: 'Invalid email or password.'
       });
     }
 
@@ -153,7 +168,7 @@ router.post('/logout', (req, res) => {
 });
 
 // @route   GET /api/auth/me
-// @desc    Get currently logged in user from session
+// @desc    Get currently logged in user from session (strips password)
 // @access  Public
 router.get('/me', (req, res) => {
   if (req.session && req.session.user) {
@@ -169,3 +184,4 @@ router.get('/me', (req, res) => {
 });
 
 module.exports = router;
+
