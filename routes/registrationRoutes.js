@@ -220,5 +220,102 @@ router.get('/:id/qrcode', requireDB, async (req, res) => {
   }
 });
 
+const PDFDocument = require('pdfkit');
+
+// @route   GET /api/registrations/:id/certificate
+// @desc    Generate and stream PDF Certificate of Participation for attended event
+// @access  Student only (Owner or Admin)
+router.get('/:id/certificate', requireDB, async (req, res) => {
+  try {
+    const registration = await Registration.findById(req.params.id)
+      .populate('student', 'name email')
+      .populate('event', 'title date venue organizer category');
+
+    if (!registration) {
+      return res.status(404).json({
+        success: false,
+        message: 'Registration record not found.'
+      });
+    }
+
+    // Ensure session user owns registration or is admin
+    if (!req.session || !req.session.user || (req.session.user.role === 'student' && registration.student._id.toString() !== req.session.user.id)) {
+      return res.status(403).json({
+        success: false,
+        message: 'Unauthorized access to certificate.'
+      });
+    }
+
+    // Certificate is only generated for attended events
+    if (!registration.attended) {
+      return res.status(400).json({
+        success: false,
+        message: 'Certificate is only available for events you have attended. Please check in with the event admin at entry.'
+      });
+    }
+
+    const doc = new PDFDocument({
+      layout: 'landscape',
+      size: 'A4',
+      margin: 40
+    });
+
+    const studentName = registration.student ? registration.student.name : 'Student';
+    const eventTitle = registration.event ? registration.event.title : 'College Event';
+    const eventDate = registration.event ? registration.event.date : new Date().toLocaleDateString();
+    const organizer = registration.event ? registration.event.organizer : 'Campus Event Committee';
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `inline; filename="Certificate-${studentName.replace(/\s+/g, '_')}.pdf"`);
+
+    doc.pipe(res);
+
+    // Decorative outer border
+    doc.rect(20, 20, doc.page.width - 40, doc.page.height - 40).strokeColor('#4f46e5').lineWidth(3).stroke();
+    doc.rect(26, 26, doc.page.width - 52, doc.page.height - 52).strokeColor('#c7d2fe').lineWidth(1).stroke();
+
+    // Certificate Header
+    doc.moveDown(2);
+    doc.font('Helvetica-Bold').fontSize(28).fillColor('#4f46e5').text('COLLEGE EVENT HUB', { align: 'center' });
+    doc.font('Helvetica').fontSize(14).fillColor('#6b7280').text('OFFICIAL CERTIFICATE OF PARTICIPATION', { align: 'center' });
+
+    doc.moveDown(1.5);
+    doc.font('Helvetica').fontSize(14).fillColor('#374151').text('This is proudly presented to', { align: 'center' });
+
+    doc.moveDown(0.8);
+    doc.font('Helvetica-Bold').fontSize(26).fillColor('#1f2937').text(studentName.toUpperCase(), { align: 'center' });
+
+    doc.moveDown(0.8);
+    doc.font('Helvetica').fontSize(14).fillColor('#374151').text('for successfully attending and actively participating in the event', { align: 'center' });
+
+    doc.moveDown(0.8);
+    doc.font('Helvetica-Bold').fontSize(22).fillColor('#4f46e5').text(`"${eventTitle}"`, { align: 'center' });
+
+    doc.moveDown(1);
+    doc.font('Helvetica').fontSize(12).fillColor('#6b7280').text(`Held on ${eventDate}  |  Organized by ${organizer}`, { align: 'center' });
+
+    // Footer Signatures
+    const bottomY = doc.page.height - 120;
+    
+    // Left signature line
+    doc.moveTo(100, bottomY).lineTo(280, bottomY).stroke('#9ca3af');
+    doc.font('Helvetica-Bold').fontSize(10).fillColor('#4f46e5');
+    doc.text('Event Coordinator', 100, bottomY + 10, { width: 180, align: 'center' });
+
+    // Right signature line
+    doc.moveTo(doc.page.width - 280, bottomY).lineTo(doc.page.width - 100, bottomY).stroke('#9ca3af');
+    doc.text('Dean of Student Affairs', doc.page.width - 280, bottomY + 10, { width: 180, align: 'center' });
+
+    doc.end();
+  } catch (error) {
+    console.error('Certificate generation error:', error);
+    return res.status(500).json({
+      success: false,
+      message: error.message || 'Server error generating certificate PDF.'
+    });
+  }
+});
+
 module.exports = router;
+
 

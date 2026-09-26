@@ -116,6 +116,11 @@ function renderRegistrationCard(reg) {
           <button onclick="showQrTicket('${reg._id}')" class="btn btn-primary btn-sm" style="flex: 1;">
             🎟️ QR Ticket
           </button>
+          ${reg.attended ? `
+            <a href="/api/registrations/${reg._id}/certificate" target="_blank" class="btn btn-secondary btn-sm" style="flex: 1;">
+              📜 Certificate
+            </a>
+          ` : ''}
           <a href="event-details.html?id=${event._id}" class="btn btn-outline btn-sm">
             Details
           </a>
