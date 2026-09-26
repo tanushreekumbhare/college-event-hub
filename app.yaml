@@ -1,0 +1,29 @@
+# Google App Engine Standard Environment Configuration
+runtime: nodejs20
+
+instance_class: F1
+
+automatic_scaling:
+  min_instances: 0
+  max_instances: 2
+
+# Handlers ensure fast routing and static asset serving
+handlers:
+  - url: /css
+    static_dir: public/css
+    secure: always
+
+  - url: /js
+    static_dir: public/js
+    secure: always
+
+  - url: /.*
+    script: auto
+    secure: always
+
+# Environment variables for App Engine deployment
+env_variables:
+  NODE_ENV: 'production'
+  SESSION_SECRET: 'college_event_hub_production_session_secret_key_appengine'
+  MONGODB_URI: 'mongodb+srv://tkumbhare76_db_user:tanushree%24kumbhare%24@cluster0.o9aenbr.mongodb.net/college_events?retryWrites=true&w=majority'
+

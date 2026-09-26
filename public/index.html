@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>College Event Hub - Discover. Register. Participate.</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-badge">🎓</div>
+        <span>College Event Hub</span>
+      </a>
+
+      <ul class="nav-links" id="nav-links-container">
+        <li><a href="index.html" class="nav-link active">Home</a></li>
+        <li><a href="events.html" class="nav-link">Events</a></li>
+      </ul>
+
+      <div class="nav-auth" id="nav-auth-container">
+        <!-- Injected via auth.js -->
+        <a href="login.html" class="btn btn-outline btn-sm">Login</a>
+        <a href="register.html" class="btn btn-primary btn-sm">Register</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+
+      <!-- Hero Banner -->
+      <section class="hero">
+        <div class="container hero-content">
+          <span class="hero-subtitle-badge">Campus Activities & Workshops</span>
+          <h1>College Event Hub</h1>
+          <p class="tagline">Discover. Register. Participate.</p>
+          <p class="description">
+            Your centralized portal for hackathons, cultural festivals, sports tournaments, technical workshops,
+            and academic seminars across the college campus. Never miss out on campus life again!
+          </p>
+          <div class="hero-actions">
+            <a href="events.html" class="btn btn-secondary btn-lg">Browse Upcoming Events 🚀</a>
+            <a href="register.html" class="btn btn-outline btn-lg" style="color: white; border-color: rgba(255,255,255,0.4);">
+              Create Student Account
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- How It Works Section -->
+      <section style="margin-bottom: 3.5rem;">
+        <div style="text-align: center; max-width: 600px; margin: 0 auto 2.5rem auto;">
+          <h2 style="font-size: 2rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.5rem;">
+            How It Works
+          </h2>
+          <p style="color: var(--text-muted);">
+            Simple, streamlined event discovery and seamless attendance tracking for our college community.
+          </p>
+        </div>
+
+        <div class="grid-3">
+          <div class="card" style="text-align: center; padding: 2.25rem 1.5rem;">
+            <div style="font-size: 2.5rem; margin-bottom: 1rem;">🔍</div>
+            <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem;">1. Discover Events</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">
+              Filter campus events by category, date, or organizer. Find technical workshops, cultural nights, and sports meets.
+            </p>
+          </div>
+
+          <div class="card" style="text-align: center; padding: 2.25rem 1.5rem;">
+            <div style="font-size: 2.5rem; margin-bottom: 1rem;">🎟️</div>
+            <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem;">2. One-Click Register</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">
+              Sign in with your student credentials and secure your seat instantly with live capacity checking.
+            </p>
+          </div>
+
+          <div class="card" style="text-align: center; padding: 2.25rem 1.5rem;">
+            <div style="font-size: 2.5rem; margin-bottom: 1rem;">🏆</div>
+            <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem;">3. Attend & Engage</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">
+              Manage your registered events on your dashboard, check venues, receive updates, and expand your skills.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Event Categories Grid -->
+      <section style="margin-bottom: 3.5rem;">
+        <div style="text-align: center; max-width: 600px; margin: 0 auto 2rem auto;">
+          <h2 style="font-size: 2rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.5rem;">
+            Explore by Category
+          </h2>
+          <p style="color: var(--text-muted);">
+            Find activities tailored to your passions and academic goals.
+          </p>
+        </div>
+
+        <div class="grid-4">
+          <a href="events.html" class="card" style="text-align: center; text-decoration: none; border-top: 4px solid #2563eb;">
+            <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">💻</div>
+            <h4 style="color: var(--text-main); font-weight: 700;">Technical</h4>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">Coding, Hackathons, Robotics</span>
+          </a>
+
+          <a href="events.html" class="card" style="text-align: center; text-decoration: none; border-top: 4px solid #9333ea;">
+            <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">🎭</div>
+            <h4 style="color: var(--text-main); font-weight: 700;">Cultural</h4>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">Music, Dance, Drama, Arts</span>
+          </a>
+
+          <a href="events.html" class="card" style="text-align: center; text-decoration: none; border-top: 4px solid #059669;">
+            <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">⚽</div>
+            <h4 style="color: var(--text-main); font-weight: 700;">Sports</h4>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">Cricket, Football, Athletics</span>
+          </a>
+
+          <a href="events.html" class="card" style="text-align: center; text-decoration: none; border-top: 4px solid #d97706;">
+            <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">🛠️</div>
+            <h4 style="color: var(--text-main); font-weight: 700;">Workshops</h4>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">Hands-on skill bootcamps</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Featured Upcoming Events -->
+      <section style="margin-bottom: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem;">
+          <div>
+            <h2 style="font-size: 1.85rem; font-weight: 800; color: var(--text-main);">
+              Upcoming Events
+            </h2>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">
+              Be the first to reserve your spot in high-demand campus sessions.
+            </p>
+          </div>
+          <a href="events.html" class="btn btn-outline btn-sm">View All Events &rarr;</a>
+        </div>
+
+        <div id="events-container" class="grid-3">
+          <!-- Dynamic cards loaded via events.js -->
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">🎓 College Event Hub</div>
+          <p style="font-size: 0.9rem; line-height: 1.6; max-width: 360px;">
+            The official unified event management platform for students, clubs, and college faculty.
+          </p>
+        </div>
+        <div>
+          <h4 style="color: white; margin-bottom: 1rem; font-size: 1rem;">Quick Links</h4>
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem;">
+            <li><a href="index.html" style="color: #94a3b8;">Home</a></li>
+            <li><a href="events.html" style="color: #94a3b8;">Browse Events</a></li>
+            <li><a href="login.html" style="color: #94a3b8;">Student Login</a></li>
+            <li><a href="register.html" style="color: #94a3b8;">Register</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color: white; margin-bottom: 1rem; font-size: 1rem;">Platform Info</h4>
+          <p style="font-size: 0.85rem; line-height: 1.6;">
+            Powered by Node.js 24 & Express.<br>
+            Database: MongoDB Atlas.<br>
+            Deployment: Google App Engine.
+          </p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        &copy; 2026 College Event Hub. Built for Google App Engine Deployment.
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/auth.js"></script>
+  <script src="js/events.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      loadEvents();
+    });
+  </script>
+</body>
+</html>

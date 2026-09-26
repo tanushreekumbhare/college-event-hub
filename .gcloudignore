@@ -1,0 +1,24 @@
+# This file specifies files and directories to be ignored by gcloud app deploy.
+# App Engine will install dependencies defined in package.json automatically.
+
+.gcloudignore
+.git
+.gitignore
+
+# Never upload node_modules (App Engine standard builds them remotely)
+node_modules/
+
+# Never upload secret environment files
+.env
+.env.local
+.env.*
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS and Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

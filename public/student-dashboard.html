@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard - College Event Hub</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-badge">🎓</div>
+        <span>College Event Hub</span>
+      </a>
+
+      <ul class="nav-links" id="nav-links-container">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="events.html" class="nav-link">Browse Events</a></li>
+        <li><a href="student-dashboard.html" class="nav-link active">My Dashboard</a></li>
+      </ul>
+
+      <div class="nav-auth" id="nav-auth-container">
+        <!-- Injected via auth.js -->
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+      
+      <!-- Greeting Header -->
+      <div style="margin-bottom: 2rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;">
+        <div>
+          <h1 id="student-greeting" style="font-size: 2.25rem; font-weight: 800; color: var(--text-main);">
+            Welcome, Student!
+          </h1>
+          <p style="color: var(--text-muted); font-size: 1rem;">
+            Here are your enrolled activities and tickets for this semester.
+          </p>
+        </div>
+
+        <a href="events.html" class="btn btn-primary">
+          + Explore More Events
+        </a>
+      </div>
+
+      <!-- Quick Metrics -->
+      <div class="grid-3" style="margin-bottom: 2.5rem;">
+        <div class="stat-card">
+          <div class="stat-icon">🎟️</div>
+          <div>
+            <div id="stat-registered-count" class="stat-value">0</div>
+            <div class="stat-label">Registered Events</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon green">📅</div>
+          <div>
+            <div class="stat-value">Active</div>
+            <div class="stat-label">Student Status</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon amber">🏛️</div>
+          <div>
+            <div class="stat-value">Campus</div>
+            <div class="stat-label">Community Hub</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Registered Events Section -->
+      <section>
+        <div style="margin-bottom: 1.25rem;">
+          <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--text-main);">
+            My Enrolled Events
+          </h2>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">
+            Review your upcoming events or release your registration if you can no longer attend.
+          </p>
+        </div>
+
+        <div id="registered-events-container">
+          <!-- Rendered via student.js -->
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        &copy; 2026 College Event Hub. Built for Google App Engine Deployment.
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/auth.js"></script>
+  <script src="js/student.js"></script>
+</body>
+</html>

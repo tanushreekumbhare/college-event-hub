@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: college-event-hub
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: MONGODB_URI
+        value: mongodb+srv://tkumbhare76_db_user:tanushree%24kumbhare%24@cluster0.o9aenbr.mongodb.net/college_events?retryWrites=true&w=majority
+      - key: NODE_ENV
+        value: production
+      - key: SESSION_SECRET
+        value: college_event_hub_production_session_secret_render_2026

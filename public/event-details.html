@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Details - College Event Hub</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-badge">🎓</div>
+        <span>College Event Hub</span>
+      </a>
+
+      <ul class="nav-links" id="nav-links-container">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="events.html" class="nav-link">Events</a></li>
+      </ul>
+
+      <div class="nav-auth" id="nav-auth-container">
+        <!-- Injected via auth.js -->
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+      
+      <!-- Back Link -->
+      <div style="margin-bottom: 1.5rem;">
+        <a href="events.html" style="display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; color: var(--text-muted);">
+          &larr; Back to all events
+        </a>
+      </div>
+
+      <!-- Injected Event Details View -->
+      <div id="event-detail-content">
+        <div style="text-align: center; padding: 4rem 0;">
+          <p style="color: var(--text-muted); font-size: 1.1rem;">Loading event details...</p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        &copy; 2026 College Event Hub. Built for Google App Engine Deployment.
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/auth.js"></script>
+  <script src="js/events.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      loadEventDetails();
+    });
+  </script>
+</body>
+</html>

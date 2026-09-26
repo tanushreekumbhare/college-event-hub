@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Event - College Event Hub</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-badge">🎓</div>
+        <span>College Event Hub</span>
+      </a>
+
+      <ul class="nav-links" id="nav-links-container">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="events.html" class="nav-link">All Events</a></li>
+        <li><a href="admin-dashboard.html" class="nav-link">Admin Dashboard</a></li>
+        <li><a href="create-event.html" class="nav-link active">+ Create Event</a></li>
+      </ul>
+
+      <div class="nav-auth" id="nav-auth-container">
+        <!-- Injected via auth.js -->
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container" style="max-width: 800px;">
+      
+      <div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+        <a href="admin-dashboard.html" style="display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; color: var(--text-muted);">
+          &larr; Back to Admin Dashboard
+        </a>
+      </div>
+
+      <div class="card">
+        <div style="margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">
+          <h1 id="form-page-title" style="font-size: 1.85rem; font-weight: 800; color: var(--text-main);">
+            Create College Event
+          </h1>
+          <p style="color: var(--text-muted); font-size: 0.95rem;">
+            Fill in the details below to publish an event on the college event hub.
+          </p>
+        </div>
+
+        <div id="form-alert"></div>
+
+        <form id="event-form">
+          <div class="form-group">
+            <label for="title">Event Title *</label>
+            <input
+              type="text"
+              id="title"
+              class="form-control"
+              placeholder="e.g. Annual Campus Hackathon 2026"
+              required
+            >
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="category">Category *</label>
+              <select id="category" class="form-control" required>
+                <option value="Technical">Technical</option>
+                <option value="Cultural">Cultural</option>
+                <option value="Sports">Sports</option>
+                <option value="Workshop">Workshop</option>
+                <option value="Seminar">Seminar</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="maxParticipants">Max Participant Capacity *</label>
+              <input
+                type="number"
+                id="maxParticipants"
+                class="form-control"
+                placeholder="e.g. 100"
+                min="1"
+                required
+              >
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="date">Event Date *</label>
+              <input
+                type="date"
+                id="date"
+                class="form-control"
+                required
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="time">Event Time *</label>
+              <input
+                type="text"
+                id="time"
+                class="form-control"
+                placeholder="e.g. 10:00 AM - 4:00 PM"
+                required
+              >
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="venue">Venue / Room *</label>
+              <input
+                type="text"
+                id="venue"
+                class="form-control"
+                placeholder="e.g. Main Auditorium, Block C"
+                required
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="organizer">Organizing Club / Department *</label>
+              <input
+                type="text"
+                id="organizer"
+                class="form-control"
+                placeholder="e.g. Department of Computer Science"
+                required
+              >
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="imageUrl">Banner Image URL (Optional)</label>
+            <input
+              type="url"
+              id="imageUrl"
+              class="form-control"
+              placeholder="e.g. https://images.unsplash.com/photo-..."
+            >
+            <div class="form-help">Leave blank to use a default high-resolution campus banner.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="description">Detailed Description *</label>
+            <textarea
+              id="description"
+              class="form-control"
+              placeholder="Provide event overview, schedule, rules, prerequisites, and prizes..."
+              rows="5"
+              required
+            ></textarea>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem;">
+            <a href="admin-dashboard.html" class="btn btn-outline">Cancel</a>
+            <button type="submit" id="event-submit-btn" class="btn btn-primary btn-lg">
+              Create Event
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        &copy; 2026 College Event Hub. Built for Google App Engine Deployment.
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/auth.js"></script>
+  <script src="js/admin.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initEventForm();
+    });
+  </script>
+</body>
+</html>

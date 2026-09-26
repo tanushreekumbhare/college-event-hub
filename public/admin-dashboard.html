@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - College Event Hub</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-badge">🎓</div>
+        <span>College Event Hub</span>
+      </a>
+
+      <ul class="nav-links" id="nav-links-container">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="events.html" class="nav-link">All Events</a></li>
+        <li><a href="admin-dashboard.html" class="nav-link active">Admin Dashboard</a></li>
+        <li><a href="create-event.html" class="nav-link">+ Create Event</a></li>
+      </ul>
+
+      <div class="nav-auth" id="nav-auth-container">
+        <!-- Injected via auth.js -->
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+      
+      <!-- Admin Header -->
+      <div style="margin-bottom: 2rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;">
+        <div>
+          <h1 style="font-size: 2.25rem; font-weight: 800; color: var(--text-main);">
+            Campus Administrator Console
+          </h1>
+          <p style="color: var(--text-muted); font-size: 1rem;">
+            Real-time analytics, event management, and attendee rosters.
+          </p>
+        </div>
+
+        <a href="create-event.html" class="btn btn-primary btn-lg">
+          + Create New Event
+        </a>
+      </div>
+
+      <!-- Stat Cards Grid -->
+      <div class="grid-4" style="margin-bottom: 2.5rem;">
+        <div class="stat-card">
+          <div class="stat-icon">🎪</div>
+          <div>
+            <div id="stat-total-events" class="stat-value">0</div>
+            <div class="stat-label">Total Events</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon amber">⏳</div>
+          <div>
+            <div id="stat-upcoming-events" class="stat-value">0</div>
+            <div class="stat-label">Upcoming Events</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon purple">🎫</div>
+          <div>
+            <div id="stat-total-registrations" class="stat-value">0</div>
+            <div class="stat-label">Total Registrations</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon green">🧑‍🎓</div>
+          <div>
+            <div id="stat-total-students" class="stat-value">0</div>
+            <div class="stat-label">Enrolled Students</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Events Management Section -->
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+          <div>
+            <h2 style="font-size: 1.35rem; font-weight: 700; color: var(--text-main);">
+              College Events Catalog
+            </h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem;">
+              Manage event listings, view student rosters, or modify capacities.
+            </p>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Event Title & Organizer</th>
+                <th>Category</th>
+                <th>Date & Time</th>
+                <th>Venue</th>
+                <th>Capacity</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-events-tbody">
+              <!-- Dynamically populated via admin.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Registrations Attendee Modal -->
+  <div id="registrations-modal" class="modal-overlay">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 id="modal-event-title" style="font-size: 1.2rem; font-weight: 700;">Event Attendees</h3>
+        <button onclick="closeRegistrationsModal()" class="btn btn-outline btn-sm" style="border: none; font-size: 1.2rem; cursor: pointer;">
+          ✕
+        </button>
+      </div>
+      <div id="modal-attendees-content" class="modal-body">
+        <!-- Injected via admin.js -->
+      </div>
+      <div class="modal-footer">
+        <button onclick="closeRegistrationsModal()" class="btn btn-outline btn-sm">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        &copy; 2026 College Event Hub. Built for Google App Engine Deployment.
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/auth.js"></script>
+  <script src="js/admin.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initAdminDashboard();
+    });
+  </script>
+</body>
+</html>

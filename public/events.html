@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browse Events - College Event Hub</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-brand-badge">🎓</div>
+        <span>College Event Hub</span>
+      </a>
+
+      <ul class="nav-links" id="nav-links-container">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="events.html" class="nav-link active">Events</a></li>
+      </ul>
+
+      <div class="nav-auth" id="nav-auth-container">
+        <!-- Injected via auth.js -->
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+      
+      <!-- Page Header -->
+      <div style="margin-bottom: 2rem;">
+        <h1 style="font-size: 2.25rem; font-weight: 800; color: var(--text-main);">
+          Discover College Events
+        </h1>
+        <p style="color: var(--text-muted); font-size: 1rem;">
+          Find and register for academic, cultural, technical, and sports events happening across campus.
+        </p>
+      </div>
+
+      <!-- Search & Category Filter Toolbar -->
+      <div class="filter-toolbar">
+        <div class="search-box">
+          <input
+            type="text"
+            id="search-input"
+            class="form-control"
+            placeholder="🔎 Search by event title, organizer, or venue..."
+          >
+        </div>
+
+        <div class="category-chips">
+          <button class="chip-btn active" data-category="All">All Categories</button>
+          <button class="chip-btn" data-category="Technical">💻 Technical</button>
+          <button class="chip-btn" data-category="Cultural">🎭 Cultural</button>
+          <button class="chip-btn" data-category="Sports">⚽ Sports</button>
+          <button class="chip-btn" data-category="Workshop">🛠️ Workshop</button>
+          <button class="chip-btn" data-category="Seminar">📢 Seminar</button>
+        </div>
+      </div>
+
+      <!-- Count Header -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <span id="events-count" style="font-size: 0.95rem; font-weight: 600; color: var(--text-muted);">
+          Loading events...
+        </span>
+      </div>
+
+      <!-- Events Grid -->
+      <div id="events-container" class="grid-3">
+        <!-- Rendered by events.js -->
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        &copy; 2026 College Event Hub. Built for Google App Engine Deployment.
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/auth.js"></script>
+  <script src="js/events.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      setupSearchAndFilters();
+      loadEvents();
+    });
+  </script>
+</body>
+</html>

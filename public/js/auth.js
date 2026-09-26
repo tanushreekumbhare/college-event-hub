@@ -1,0 +1,242 @@
+/**
+ * College Event Hub - Authentication Management
+ * Handles session status, navbar rendering, login, register, and logout.
+ */
+
+// Utility: Show alert message inside target element
+function showAlert(elementId, message, type = 'error') {
+  const container = document.getElementById(elementId);
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="alert alert-${type}">
+      <span>${message}</span>
+    </div>
+  `;
+}
+
+// Clear alert message
+function clearAlert(elementId) {
+  const container = document.getElementById(elementId);
+  if (container) container.innerHTML = '';
+}
+
+// Fetch currently logged in user
+async function getCurrentUser() {
+  try {
+    const res = await fetch('/api/auth/me');
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.user || null;
+  } catch (err) {
+    console.error('Error fetching session:', err);
+    return null;
+  }
+}
+
+// Render dynamic navigation bar depending on user login state
+async function renderNavbar() {
+  const navContainer = document.getElementById('nav-auth-container');
+  const navLinksContainer = document.getElementById('nav-links-container');
+  if (!navContainer) return;
+
+  const user = await getCurrentUser();
+
+  if (user) {
+    // Dynamic links
+    if (navLinksContainer) {
+      if (user.role === 'admin') {
+        navLinksContainer.innerHTML = `
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="events.html" class="nav-link">All Events</a></li>
+          <li><a href="admin-dashboard.html" class="nav-link">Admin Dashboard</a></li>
+          <li><a href="create-event.html" class="nav-link">+ Create Event</a></li>
+        `;
+      } else {
+        navLinksContainer.innerHTML = `
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="events.html" class="nav-link">Browse Events</a></li>
+          <li><a href="student-dashboard.html" class="nav-link">My Dashboard</a></li>
+        `;
+      }
+    }
+
+    // Dynamic user badge & logout
+    navContainer.innerHTML = `
+      <div class="user-badge">
+        <span>👤 ${escapeHtml(user.name)}</span>
+        <span class="role-tag ${user.role}">${user.role}</span>
+      </div>
+      <button onclick="handleLogout()" class="btn btn-outline btn-sm">Logout</button>
+    `;
+  } else {
+    if (navLinksContainer) {
+      navLinksContainer.innerHTML = `
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="events.html" class="nav-link">Events</a></li>
+      `;
+    }
+
+    navContainer.innerHTML = `
+      <a href="login.html" class="btn btn-outline btn-sm">Login</a>
+      <a href="register.html" class="btn btn-primary btn-sm">Register</a>
+    `;
+  }
+}
+
+// Guard page access
+async function enforceAuth(requiredRole = null) {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    window.location.href = `login.html?redirect=${encodeURIComponent(window.location.pathname)}`;
+    return null;
+  }
+
+  if (requiredRole && user.role !== requiredRole) {
+    alert(`Access denied. This page is restricted to ${requiredRole}s.`);
+    window.location.href = user.role === 'admin' ? 'admin-dashboard.html' : 'student-dashboard.html';
+    return null;
+  }
+
+  return user;
+}
+
+// Handle User Login
+async function handleLoginSubmit(event) {
+  event.preventDefault();
+  clearAlert('auth-alert');
+
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const submitBtn = document.getElementById('submit-btn');
+
+  if (!email || !password) {
+    showAlert('auth-alert', 'Please enter both email and password.');
+    return;
+  }
+
+  try {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Logging in...';
+
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      showAlert('auth-alert', data.message || 'Invalid credentials.');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Sign In';
+      return;
+    }
+
+    showAlert('auth-alert', 'Login successful! Redirecting...', 'success');
+
+    setTimeout(() => {
+      if (data.user.role === 'admin') {
+        window.location.href = 'admin-dashboard.html';
+      } else {
+        // Redirect to requested page or student dashboard
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirect = urlParams.get('redirect');
+        window.location.href = redirect || 'student-dashboard.html';
+      }
+    }, 800);
+  } catch (err) {
+    console.error('Login request failed:', err);
+    showAlert('auth-alert', 'Unable to reach the server. Please check your network or try again.');
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Sign In';
+  }
+}
+
+// Handle User Registration
+async function handleRegisterSubmit(event) {
+  event.preventDefault();
+  clearAlert('auth-alert');
+
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const confirmPassword = document.getElementById('confirmPassword').value;
+  const submitBtn = document.getElementById('submit-btn');
+
+  if (!name || !email || !password || !confirmPassword) {
+    showAlert('auth-alert', 'All fields are required.');
+    return;
+  }
+
+  if (password.length < 6) {
+    showAlert('auth-alert', 'Password must be at least 6 characters.');
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    showAlert('auth-alert', 'Passwords do not match.');
+    return;
+  }
+
+  try {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Creating Account...';
+
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      showAlert('auth-alert', data.message || 'Registration failed.');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Create Account';
+      return;
+    }
+
+    showAlert('auth-alert', 'Registration successful! Welcome aboard. Redirecting...', 'success');
+    setTimeout(() => {
+      window.location.href = 'student-dashboard.html';
+    }, 1000);
+  } catch (err) {
+    console.error('Registration failed:', err);
+    showAlert('auth-alert', 'Unable to reach the server. Please try again later.');
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Create Account';
+  }
+}
+
+// Handle User Logout
+async function handleLogout() {
+  try {
+    const res = await fetch('/api/auth/logout', { method: 'POST' });
+    if (res.ok) {
+      window.location.href = 'index.html';
+    }
+  } catch (err) {
+    console.error('Logout error:', err);
+    window.location.href = 'index.html';
+  }
+}
+
+// Helper: Escape HTML to avoid XSS in dynamic templates
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+// Initialize navbar automatically on DOM load
+document.addEventListener('DOMContentLoaded', () => {
+  renderNavbar();
+});

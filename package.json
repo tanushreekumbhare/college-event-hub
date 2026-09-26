@@ -1,0 +1,33 @@
+{
+  "name": "college-event-hub",
+  "version": "1.0.0",
+  "description": "Cloud-based college event management web application ready for Google App Engine",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "seed:admin": "node seedAdmin.js",
+    "test": "node test/test-runner.js"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "college",
+    "events",
+    "express",
+    "appengine",
+    "mongodb"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "mongoose": "^8.8.4"
+  },
+  "devDependencies": {
+    "supertest": "^7.3.0"
+  }
+}
