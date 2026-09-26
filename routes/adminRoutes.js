@@ -165,6 +165,14 @@ router.post('/verify-attendance', requireDB, isAdmin, async (req, res) => {
       }
     }
 
+    const mongoose = require('mongoose');
+    if (!mongoose.Types.ObjectId.isValid(registrationId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid Ticket ID format. Please scan or enter a valid 24-character ObjectId.'
+      });
+    }
+
     const registration = await Registration.findById(registrationId)
       .populate('student', 'name email')
       .populate('event', 'title date time venue');

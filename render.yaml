@@ -7,7 +7,7 @@ services:
     startCommand: node server.js
     envVars:
       - key: MONGODB_URI
-        value: mongodb+srv://tkumbhare76_db_user:tanushree%24kumbhare%24@cluster0.o9aenbr.mongodb.net/college_events?retryWrites=true&w=majority
+        value: mongodb+srv://tanushreekumbhare11_db_user:LAUOMNrXqnGuwTaJ@cluster0.bvf4swb.mongodb.net/college_event_hub?retryWrites=true&w=majority
       - key: NODE_ENV
         value: production
       - key: SESSION_SECRET
