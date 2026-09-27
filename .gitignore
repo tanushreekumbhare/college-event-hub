@@ -17,6 +17,10 @@ yarn-error.log*
 .DS_Store
 Thumbs.db
 
+# Uploads
+public/uploads/*
+!public/uploads/.gitkeep
+
 # Editor configurations
 .vscode/
 .idea/

@@ -57,14 +57,14 @@ document.addEventListener('DOMContentLoaded', async () => {
           organizerList.innerHTML = `
             <div class="events-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
               ${events.map(ev => `
-                <div class="card" style="padding: 1.25rem; border-radius: 12px; border: 1px solid #e2e8f0;">
+                <div class="card" style="padding: 1.25rem; border-radius: 12px; border: 1px solid var(--border-color);">
                   <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
                     <span style="background: #e0e7ff; color: #4338ca; padding: 0.25rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700;">${ev.category || 'General'}</span>
                     <span style="background: ${ev.status === 'APPROVED' ? '#d1fae5' : (ev.status === 'REJECTED' ? '#fee2e2' : '#fef3c7')}; color: ${ev.status === 'APPROVED' ? '#065f46' : (ev.status === 'REJECTED' ? '#991b1b' : '#92400e')}; padding: 0.25rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700;">${ev.status}</span>
                   </div>
-                  <h3 style="margin-bottom: 0.5rem; font-size: 1.1rem; color: #0f172a;">${ev.title}</h3>
-                  <p style="color: #64748b; font-size: 0.875rem; margin-bottom: 0.75rem;">${ev.description ? ev.description.substring(0, 90) + '...' : ''}</p>
-                  <div style="font-size: 0.85rem; color: #475569; margin-bottom: 1rem;">
+                  <h3 style="margin-bottom: 0.5rem; font-size: 1.1rem; color: var(--text-main);">${ev.title}</h3>
+                  <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 0.75rem;">${ev.description ? ev.description.substring(0, 90) + '...' : ''}</p>
+                  <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
                     <div>📅 ${ev.date} at ${ev.time}</div>
                     <div>📍 ${ev.venue}</div>
                     <div>👥 Capacity: ${ev.maxParticipants} max seats</div>

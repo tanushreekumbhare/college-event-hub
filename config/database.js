@@ -29,6 +29,39 @@ const connectDB = async () => {
     });
     isConnected = true;
     console.log(`[College Event Hub] MongoDB Connected: ${conn.connection.host}`);
+    
+    // Auto-seed default admin account if not existing
+    try {
+      const User = require('../models/User');
+      const bcrypt = require('bcryptjs');
+      const adminEmail = (process.env.ADMIN_EMAIL || 'admin@college.edu').toLowerCase().trim();
+      const adminPassword = process.env.ADMIN_PASSWORD || 'AdminPassword2026!';
+      const adminName = process.env.ADMIN_NAME || 'System Administrator';
+
+      const existingAdmin = await User.findOne({ email: adminEmail });
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(adminPassword, salt);
+
+      if (!existingAdmin) {
+        const newAdmin = new User({
+          name: adminName,
+          email: adminEmail,
+          password: hashedPassword,
+          role: 'admin'
+        });
+        await newAdmin.save();
+        console.log(`[College Event Hub] Default admin user auto-seeded: ${adminEmail}`);
+      } else {
+        existingAdmin.name = adminName;
+        existingAdmin.password = hashedPassword;
+        existingAdmin.role = 'admin';
+        await existingAdmin.save();
+        console.log(`[College Event Hub] Admin user password & role synced: ${adminEmail}`);
+      }
+    } catch (seedErr) {
+      console.error('[College Event Hub] Auto-seed admin error:', seedErr.message);
+    }
+
     return true;
   } catch (error) {
     isConnected = false;

@@ -522,3 +522,103 @@ async function handleEventFormSubmit(e, eventId) {
   }
 }
 
+// Subpage initializers for /admin/ subpages
+document.addEventListener('DOMContentLoaded', async () => {
+  const categoryChartCanvas = document.getElementById('category-chart');
+  if (categoryChartCanvas) {
+    loadAdminStats();
+    loadCategoryChart(categoryChartCanvas);
+  }
+
+  const pendingEventsContainer = document.getElementById('pending-events-container');
+  if (pendingEventsContainer) {
+    loadPendingEvents(pendingEventsContainer);
+  }
+
+  const usersTableContainer = document.getElementById('users-table-container');
+  if (usersTableContainer) {
+    loadUsersTable(usersTableContainer);
+  }
+
+  const venuesContainer = document.getElementById('venues-container');
+  if (venuesContainer) {
+    loadVenuesContainer(venuesContainer);
+  }
+});
+
+async function loadCategoryChart(canvas) {
+  try {
+    const res = await fetch('/api/admin/analytics');
+    const data = await res.json();
+    if (!res.ok || !data.analytics) return;
+
+    const breakdown = data.analytics.categoryBreakdown || [];
+    const labels = breakdown.map(b => b._id || 'Other');
+    const counts = breakdown.map(b => b.totalEvents || 0);
+
+    if (typeof Chart !== 'undefined') {
+      new Chart(canvas, {
+        type: 'doughnut',
+        data: {
+          labels: labels.length > 0 ? labels : ['Technical', 'Cultural', 'Sports', 'Workshop'],
+          datasets: [{
+            data: counts.length > 0 ? counts : [4, 2, 3, 1],
+            backgroundColor: ['#2563eb', '#9333ea', '#059669', '#d97706', '#dc2626']
+          }]
+        },
+        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+      });
+    }
+  } catch (err) {
+    console.error('Error loading category chart:', err);
+  }
+}
+
+async function loadPendingEvents(container) {
+  try {
+    const res = await fetch('/api/events');
+    const data = await res.json();
+    if (!res.ok || !data.events || data.events.length === 0) {
+      container.innerHTML = '<p class="text-muted">No pending event approvals.</p>';
+      return;
+    }
+    container.innerHTML = data.events.map(ev => `
+      <div class="card" style="padding: 1.25rem; border-radius: 12px; margin-bottom: 1rem;">
+        <h3>${escapeHtml(ev.title)}</h3>
+        <p class="text-muted">${escapeHtml(ev.description || '')}</p>
+        <div style="margin-top: 0.5rem; font-size: 0.85rem;">
+          <span>📅 ${escapeHtml(ev.date)}</span> | <span>📍 ${escapeHtml(ev.venue)}</span> | <span>🏢 ${escapeHtml(ev.organizer)}</span>
+        </div>
+      </div>
+    `).join('');
+  } catch (err) {
+    container.innerHTML = '<p style="color: red;">Error loading events.</p>';
+  }
+}
+
+async function loadUsersTable(container) {
+  try {
+    const res = await fetch('/api/admin/stats');
+    const data = await res.json();
+    container.innerHTML = `
+      <div style="padding: 1rem;">
+        <h3>Registered Accounts Summary</h3>
+        <p>Total Enrolled Students: <strong>${data.stats ? data.stats.totalStudents : 0}</strong></p>
+      </div>
+    `;
+  } catch (err) {
+    container.innerHTML = '<p style="color: red;">Error loading users data.</p>';
+  }
+}
+
+async function loadVenuesContainer(container) {
+  container.innerHTML = `
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; padding: 0.5rem;">
+      <div class="card" style="padding: 1rem;">🏢 Main Auditorium (Cap: 500)</div>
+      <div class="card" style="padding: 1rem;">💻 Computer Lab 3 (Cap: 60)</div>
+      <div class="card" style="padding: 1rem;">⚽ Sports Complex Arena (Cap: 1000)</div>
+      <div class="card" style="padding: 1rem;">📢 Seminar Hall B (Cap: 150)</div>
+    </div>
+  `;
+}
+

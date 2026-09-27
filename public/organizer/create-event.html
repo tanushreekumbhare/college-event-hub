@@ -59,14 +59,15 @@
           <input type="number" name="maxParticipants" required min="1" class="form-control" value="100">
         </div>
         <div class="form-group">
-          <label>Event Poster Image (Cloudinary Upload)</label>
-          <input type="file" name="poster" accept="image/*" class="form-control">
+          <label>Event Poster Image (Cloudinary / Local Upload)</label>
+          <input type="file" name="image" accept="image/*" class="form-control">
         </div>
         <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Event</button>
       </form>
     </div>
   </div>
   <script src="/js/api.js"></script>
-  <script src="/js/events.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/organizer.js"></script>
 </body>
 </html>

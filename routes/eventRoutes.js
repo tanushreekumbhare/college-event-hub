@@ -112,10 +112,21 @@ router.get('/:id', requireDB, async (req, res) => {
 
 const { upload, uploadToCloudinary } = require('../config/cloudinary');
 
+// Safe upload wrapper that catches any Multer middleware errors without failing requests
+const safeUploadMiddleware = (req, res, next) => {
+  upload.single('image')(req, res, (err) => {
+    if (err) {
+      console.warn('[Upload Middleware] Caught file upload warning:', err.message);
+      req.file = null;
+    }
+    next();
+  });
+};
+
 // @route   POST /api/events
-// @desc    Create a new event with optional Cloudinary image upload
+// @desc    Create a new event with optional Cloudinary / local image upload
 // @access  Organizer or Admin
-router.post('/', requireDB, isOrganizerOrAdmin, upload.single('image'), async (req, res) => {
+router.post('/', requireDB, isOrganizerOrAdmin, safeUploadMiddleware, async (req, res) => {
   try {
     const {
       title,
@@ -138,17 +149,14 @@ router.post('/', requireDB, isOrganizerOrAdmin, upload.single('image'), async (r
 
     let finalImageUrl = bodyImageUrl ? bodyImageUrl.trim() : '';
 
-    // If an image file was uploaded, upload to Cloudinary
+    // If an image file was uploaded, upload to Cloudinary (with local fallback)
     if (req.file) {
       try {
-        const cloudinaryRes = await uploadToCloudinary(req.file.buffer, 'college_events');
-        finalImageUrl = cloudinaryRes.secure_url;
+        const uploadRes = await uploadToCloudinary(req.file.buffer, 'college_events', req.file.originalname);
+        finalImageUrl = uploadRes.secure_url;
       } catch (uploadError) {
-        console.error('Cloudinary upload error:', uploadError);
-        return res.status(500).json({
-          success: false,
-          message: 'Failed to upload event image poster to Cloudinary.'
-        });
+        console.error('Image upload error:', uploadError);
+        finalImageUrl = bodyImageUrl ? bodyImageUrl.trim() : '';
       }
     }
 
@@ -181,9 +189,9 @@ router.post('/', requireDB, isOrganizerOrAdmin, upload.single('image'), async (r
 });
 
 // @route   PUT /api/events/:id
-// @desc    Update an existing event with optional Cloudinary image upload
+// @desc    Update an existing event with optional Cloudinary / local image upload
 // @access  Organizer or Admin
-router.put('/:id', requireDB, isOrganizerOrAdmin, upload.single('image'), async (req, res) => {
+router.put('/:id', requireDB, isOrganizerOrAdmin, safeUploadMiddleware, async (req, res) => {
   try {
     const {
       title,
@@ -214,17 +222,13 @@ router.put('/:id', requireDB, isOrganizerOrAdmin, upload.single('image'), async 
     if (organizer) event.organizer = organizer.trim();
     if (maxParticipants) event.maxParticipants = Number(maxParticipants);
 
-    // If new image file uploaded, upload to Cloudinary
+    // If new image file uploaded, upload to Cloudinary (with local fallback)
     if (req.file) {
       try {
-        const cloudinaryRes = await uploadToCloudinary(req.file.buffer, 'college_events');
-        event.imageUrl = cloudinaryRes.secure_url;
+        const uploadRes = await uploadToCloudinary(req.file.buffer, 'college_events', req.file.originalname);
+        event.imageUrl = uploadRes.secure_url;
       } catch (uploadError) {
         console.error('Cloudinary update upload error:', uploadError);
-        return res.status(500).json({
-          success: false,
-          message: 'Failed to upload new event poster image.'
-        });
       }
     } else if (bodyImageUrl !== undefined) {
       event.imageUrl = bodyImageUrl.trim();

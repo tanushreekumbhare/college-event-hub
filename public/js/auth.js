@@ -34,11 +34,39 @@ async function getCurrentUser() {
   }
 }
 
+// Theme Toggle Management
+function initTheme() {
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  updateThemeToggleButtons(savedTheme);
+}
+
+function toggleTheme() {
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  updateThemeToggleButtons(newTheme);
+}
+
+function updateThemeToggleButtons(theme) {
+  const btns = document.querySelectorAll('.theme-toggle-btn');
+  const isDark = theme === 'dark';
+  btns.forEach(btn => {
+    btn.innerHTML = isDark ? '☀️ Light' : '🌙 Dark';
+  });
+}
+
 // Render dynamic navigation bar depending on user login state
 async function renderNavbar() {
+  initTheme();
+
   const navContainer = document.getElementById('nav-auth-container');
   const navLinksContainer = document.getElementById('nav-links-container');
   if (!navContainer) return;
+
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+  const themeBtnHtml = `<button onclick="toggleTheme()" class="theme-toggle-btn" title="Toggle Light/Dark Theme">${currentTheme === 'dark' ? '☀️ Light' : '🌙 Dark'}</button>`;
 
   const user = await getCurrentUser();
 
@@ -70,6 +98,7 @@ async function renderNavbar() {
 
     // Dynamic user badge & logout
     navContainer.innerHTML = `
+      ${themeBtnHtml}
       <div class="user-badge">
         <span>👤 ${escapeHtml(user.name)}</span>
         <span class="role-tag ${user.role}">${user.role}</span>
@@ -85,6 +114,7 @@ async function renderNavbar() {
     }
 
     navContainer.innerHTML = `
+      ${themeBtnHtml}
       <a href="login.html" class="btn btn-outline btn-sm">Login</a>
       <a href="register.html" class="btn btn-primary btn-sm">Register</a>
     `;
@@ -155,10 +185,10 @@ async function handleLoginSubmit(event) {
       } else if (data.user.role === 'organizer') {
         window.location.href = '/organizer/dashboard.html';
       } else {
-        // Redirect to requested page or student dashboard
+        // Redirect to requested page or Home page (index.html)
         const urlParams = new URLSearchParams(window.location.search);
         const redirect = urlParams.get('redirect');
-        window.location.href = redirect || 'student-dashboard.html';
+        window.location.href = redirect || 'index.html';
       }
     }, 800);
   } catch (err) {
@@ -185,8 +215,8 @@ async function handleRegisterSubmit(event) {
     return;
   }
 
-  if (password.length < 6) {
-    showAlert('auth-alert', 'Password must be at least 6 characters.');
+  if (password.length < 8) {
+    showAlert('auth-alert', 'Password must be at least 8 characters long.');
     return;
   }
 
@@ -214,9 +244,9 @@ async function handleRegisterSubmit(event) {
       return;
     }
 
-    showAlert('auth-alert', 'Registration successful! Welcome aboard. Redirecting...', 'success');
+    showAlert('auth-alert', 'Registration successful! Welcome aboard. Redirecting to Home...', 'success');
     setTimeout(() => {
-      window.location.href = 'student-dashboard.html';
+      window.location.href = 'index.html';
     }, 1000);
   } catch (err) {
     console.error('Registration failed:', err);
@@ -250,7 +280,8 @@ function escapeHtml(str) {
     .replace(/'/g, '&#039;');
 }
 
-// Initialize navbar automatically on DOM load
+// Initialize navbar and theme automatically
+initTheme();
 document.addEventListener('DOMContentLoaded', () => {
   renderNavbar();
 });

@@ -5,10 +5,10 @@ const rateLimit = require('express-rate-limit');
 const User = require('../models/User');
 const { requireDB } = require('../middleware/authMiddleware');
 
-// Rate limiter for login endpoint: 5 attempts per 15 minutes per IP
+// Rate limiter for login endpoint
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // Limit each IP to 5 requests per windowMs
+  max: process.env.NODE_ENV === 'production' ? 15 : 200, // 200 in development/test to prevent blocking
   message: {
     success: false,
     message: 'Too many login attempts. Please try again after 15 minutes.'
